@@ -1,0 +1,89 @@
+@font-face {
+  font-family: 'Hakgyoansim-Bold';
+  src: url('../assets/fonts/Hakgyoansim-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Hakgyoansim-Regular';
+  src: url('../assets/fonts/Hakgyoansim-Regular.ttf') format('truetype');
+}
+
+body {
+  background-color: #FFFFF0;
+  margin: 0;
+  padding: 0;
+  font-family: 'Hakgyoansim-Regular';
+}
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.register-title {
+  font-family: 'Hakgyoansim-Bold';
+  font-size: 24px;
+  color: #e89aa8;
+  margin-bottom: 30px;
+}
+
+.register-title span {
+  color: #b57b47;
+}
+
+.input-box {
+  width: 300px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border: 2px solid #f5a9b8;
+  border-radius: 10px;
+  background-color: white;
+  font-family: 'Hakgyoansim-Regular';
+}
+
+.input-box::placeholder {
+  color: #e2a4b1;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.back-button, .next-button {
+  font-family: 'Hakgyoansim-Bold';
+  font-size: 18px;
+  padding: 12px 40px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.back-button {
+  background-color: white;
+  color: #b57b47;
+  border: 2px solid #b57b47;
+}
+
+.back-button:hover {
+  background-color: #f7f7f7;
+}
+
+.next-button {
+  background-color: #f5a9b8;
+  color: white;
+}
+
+.next-button:hover {
+  background-color: #f291a7;
+  transform: translateY(-3px);
+}

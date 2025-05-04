@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'Hakgyoansim-Bold';
+    src: url('../assets/fonts/Hakgyoansim-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Hakgyoansim-Regular';
+    src: url('../assets/fonts/Hakgyoansim-Regular.ttf') format('truetype');
+}
+
+body {
+    background-color: #FFFFF0;
+    margin: 0;
+    padding: 0;
+    font-family: 'Hakgyoansim-Regular';
+}
+
+.preference-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.preference-title {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 24px;
+    color: #F2B9C2;
+    margin-bottom: 10px;
+}
+
+.preference-title span {
+    color: #C79665;
+}
+
+.preference-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.preference-item {
+    background-color: white;
+    border: 2px solid #F2B9C2;
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.preference-image {
+    width: 60px;
+    height: 60px;
+}
+
+.preference-name {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 18px;
+    color: #C79665;
+}
+
+.preference-options {
+    display: flex;
+    gap: 20px;
+    margin-left: auto;
+}
+
+.preference-option {
+    font-family: 'Hakgyoansim-Bold';
+    color: #F2B9C2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.preference-option input[type="radio"] {
+    accent-color: #F2B9C2;  /* 동그란 radio 버튼 핑크 */
+    width: 18px;
+    height: 18px;
+}
+
+.save-button {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 20px;
+    padding: 12px 50px;
+    background-color: #F2B9C2;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    margin-top: 40px;
+}
+
+.save-button:hover {
+    transform: translateY(-3px);
+    background-color: #e89aa8;
+}

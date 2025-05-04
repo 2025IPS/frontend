@@ -1,0 +1,133 @@
+@font-face {
+    font-family: 'Hakgyoansim-Bold';
+    src: url('../assets/fonts/Hakgyoansim-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Hakgyoansim-Regular';
+    src: url('../assets/fonts/Hakgyoansim-Regular.ttf') format('truetype');
+}
+
+.page-container {
+    background-color: #FFFBE9;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Hakgyoansim-Regular';
+    color: #B57B47;
+}
+
+.page-title {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 36px;
+    text-align: center;
+    color: #B57B47;
+    margin-bottom: 40px;
+}
+
+.page-title span {
+    color: #F2B9C2;
+}
+
+.option {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 여기서 왼쪽 정렬 */
+    padding-left: 20px;
+}
+
+.option-title {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.select-box {
+    width: 180px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #F2B9C2;
+    background-color: white;
+    color: #C79665;
+    font-size: 16px;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.button-group button {
+    padding: 8px 20px;
+    background-color: white;
+    color: #B57B47;
+    border-radius: 20px;
+    border: 2px solid #F2B9C2;
+    font-family: 'Hakgyoansim-Regular';
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-group button.active {
+    background-color: #F2B9C2;
+    color: white;
+}
+
+.filter-toggle {
+    cursor: pointer;
+}
+
+.sub-option {
+    margin-top: 20px;
+    padding-left: 20px;
+}
+
+.sub-title {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.chat-box {
+    background-color: white;
+    border: 2px solid #F2B9C2;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 40px;
+    color: #B57B47;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.chat-message {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.chat-input {
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #F2B9C2;
+    font-family: 'Hakgyoansim-Regular';
+}
+
+.common-button {
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 20px;
+    padding: 12px 60px;
+    background-color: #F2B9C2;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    margin-top: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    margin-left: 20px; /* 왼쪽 정렬 */
+}
+
+.common-button:hover {
+    transform: translateY(-3px);
+    background-color: #e89aa8;
+}

@@ -1,0 +1,87 @@
+@import '../styles/Common.css';
+
+.result-circle {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+    margin: 30px auto;
+    overflow: hidden;
+}
+
+.circle-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #F2B9C2;
+    transition: height 1s ease;
+}
+
+.circle-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.circle-inner img.menu-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.circle-inner h2 {
+    color: #7A4E29;
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 28px;
+    margin: 5px 0;
+}
+
+.circle-inner p {
+    color: #C48D99;
+    font-size: 20px;
+}
+
+.description {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #A77E5A;
+    text-align: center;
+}
+
+.result-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.home-sub-button, .common-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.home-sub-button {
+    background-color: white;
+    color: #A77E5A;
+}
+
+.common-button {
+    background-color: #F2B9C2;
+    color: white;
+}

@@ -1,0 +1,39 @@
+@import '../styles/Common.css';
+
+.home-image {
+    width: 200px;
+    height: 200px;
+    margin: 20px 0;
+}
+
+.nickname {
+    color: #C79665;
+    font-family: 'Hakgyoansim-Bold';
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.location-button {
+    border: 2px solid #F2B9C2;
+    color: #F2B9C2;
+    background-color: white;
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-family: 'Hakgyoansim-Bold';
+    margin-bottom: 20px;
+}
+
+.home-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.home-sub-button {
+    border: 2px solid #C79665;
+    background-color: white;
+    color: #C79665;
+    font-family: 'Hakgyoansim-Bold';
+    padding: 10px 30px;
+    border-radius: 30px;
+}

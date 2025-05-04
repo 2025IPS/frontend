@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Hakgyoansim-Regular';
+  src: url('./assets/fonts/Hakgyoansim-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Hakgyoansim-Bold';
+  src: url('./assets/fonts/Hakgyoansim-Bold.ttf') format('truetype');
+}
+
+body {
+  background-color: #fffbe9;
+  font-family: 'Hakgyoansim-Regular', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}

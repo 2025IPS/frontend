@@ -10,9 +10,10 @@ import HomePage from './pages/HomePage';
 import MenuRecommendPage from './pages/MenuRecommendPage';
 import QuickPickLoadingPage from './pages/QuickPickLoadingPage';
 import QuickPickResultPage from './pages/QuickPickResultPage';
-import { UserDataProvider } from './UserDataContext';
 import MenuResultPage from './pages/MenuResultPage';
-
+import AiRecommendPage from './pages/AiRecommendPage'; // ✅ 추가
+import LoginPage from './pages/LoginPage';
+import { UserDataProvider } from './UserDataContext';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/allergy" element={<AllergyPage />} />
           <Route path="/disease" element={<DiseasePage />} />
@@ -30,6 +32,7 @@ function App() {
           <Route path="/quickpick-loading" element={<QuickPickLoadingPage />} />
           <Route path="/quickpick-result" element={<QuickPickResultPage />} />
           <Route path="/menu-result" element={<MenuResultPage />} />
+          <Route path="/ai-recommend" element={<AiRecommendPage />} />  {/* ✅ 추가 */}
         </Routes>
       </Router>
     </UserDataProvider>

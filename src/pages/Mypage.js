@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Mypage.css';
-import { useUserData } from '../UserDataContext';
 import Modal from '../components/Modal';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useUserData } from '../UserDataContext';
 
 function Mypage() {
   const navigate = useNavigate();
 
+  // Context에서 사용자 데이터 가져오기
   const {
     allergy, setAllergy,
     disease, setDisease,
@@ -14,16 +16,34 @@ function Mypage() {
     dislikedMenu, setDislikedMenu,
   } = useUserData();
 
+  const username = localStorage.getItem('username');
+
   const allergyOptions = ["달걀", "갑각류", "밀", "땅콩/대두", "고기", "콩", "우유"];
   const diseaseOptions = ["고혈압", "저혈압", "당뇨", "신장질환"];
   const menuOptions = ["고기", "버섯"];
 
   const [modalInfo, setModalInfo] = useState({ isOpen: false, title: "", options: [], onSelect: () => {} });
 
+  // 사용자 데이터 불러오기
+  useEffect(() => {
+    if (!username) return;
+
+    axios.get(`http://localhost:8000/user/${username}`)
+      .then(res => {
+        setAllergy(res.data.allergies ?? []);
+        setDisease(res.data.diseases ?? []);
+        setPreferredMenu(res.data.preferred_menu ?? []);
+        setDislikedMenu(res.data.disliked_menu ?? []);
+      })
+      .catch(err => console.error("유저 데이터 불러오기 실패:", err));
+  }, [username, setAllergy, setDisease, setPreferredMenu, setDislikedMenu]);
+
+  // 태그 삭제
   const removeItem = (list, setList, item) => {
     setList(list.filter(i => i !== item));
   };
 
+  // 모달 열기
   const openModal = (title, options, list, setList) => {
     const available = options.filter(o => !list.includes(o));
     if (available.length === 0) {
@@ -42,13 +62,37 @@ function Mypage() {
     });
   };
 
+  // 모달 닫기
   const closeModal = () => {
     setModalInfo({ ...modalInfo, isOpen: false });
   };
 
+  // 저장하기
   const handleSave = () => {
-    alert("저장되었습니다!");
-    navigate("/home");
+    if (!username) {
+      console.error("사용자 정보가 없습니다. 로그인이 필요합니다.");
+      alert("사용자 정보가 없습니다. 로그인이 필요합니다.");
+      return;
+    }
+
+    const saveData = {
+      username,
+      allergies: allergy.join(","),
+      preferred_menu: preferredMenu.join(","),
+      disliked_menu: dislikedMenu.join(","),
+    };
+
+    axios.post("http://localhost:8000/mypage/update", saveData)
+      .then(() => {
+        alert("저장되었습니다!");
+        setTimeout(() => {
+          navigate("/home");
+        }, 500);
+      })
+      .catch(err => {
+        console.error("저장 오류:", err);
+        alert("저장 중 오류 발생! 세부 내용은 콘솔을 확인해주세요.");
+      });
   };
 
   return (
@@ -111,9 +155,12 @@ function Mypage() {
         </div>
       </div>
 
-      <button className="save-button" onClick={handleSave}>저장</button>
+      {/* 저장 버튼 */}
+      <div className="button-container">
+        <button className="save-button" onClick={handleSave}>저장</button>
+      </div>
 
-      {/* Modal */}
+      {/* 모달 */}
       <Modal
         isOpen={modalInfo.isOpen}
         title={modalInfo.title}

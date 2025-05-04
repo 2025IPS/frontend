@@ -12,7 +12,12 @@ function WelcomePage() {
       <button className="start-button" onClick={() => navigate("/register")}>
         시작하기
       </button>
-      <p className="login-text">이미 계정이 있나요? <span className="login-link">로그인</span></p>
+      <p className="login-text">
+        이미 계정이 있나요?{" "}
+        <span className="login-link" onClick={() => navigate("/login")}>
+          로그인
+        </span>
+      </p>
     </div>
   );
 }

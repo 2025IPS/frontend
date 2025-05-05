@@ -24,7 +24,7 @@ function HomePage() {
       });
   }, [username]);
 
-  // 위치 가져오기
+  // 위치 가져오기 → 동 이름으로 가져오기 (여기 수정됨!)
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocation("위치 정보를 지원하지 않습니다.");
@@ -32,9 +32,30 @@ function HomePage() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        setLocation(`위도: ${latitude.toFixed(4)}, 경도: ${longitude.toFixed(4)}`);
+
+        try {
+          const response = await axios.get("https://dapi.kakao.com/v2/local/geo/coord2regioncode.json", {
+            params: {
+              x: longitude,
+              y: latitude
+            },
+            headers: {
+              Authorization: "KakaoAK 815a330dcfb69987a6c219836b68598c"  // 여기에 본인의 카카오 API 키 넣기
+            }
+          });
+
+          if (response.data.documents.length > 0) {
+            const regionName = response.data.documents[0].region_3depth_name;
+            setLocation(regionName);  // 동 이름으로 표시
+          } else {
+            setLocation("지역 정보를 불러올 수 없습니다.");
+          }
+        } catch (error) {
+          console.error("카카오 API 오류:", error);
+          setLocation("지역 정보를 가져올 수 없습니다.");
+        }
       },
       (error) => {
         console.error("위치 가져오기 오류:", error);

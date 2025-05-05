@@ -24,7 +24,7 @@ function HomePage() {
       });
   }, [username]);
 
-  // 위치 가져오기 → 동 이름으로 가져오기 (여기 수정됨!)
+  // 위치 가져오기 → 동 이름으로 가져오기
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocation("위치 정보를 지원하지 않습니다.");
@@ -42,13 +42,13 @@ function HomePage() {
               y: latitude
             },
             headers: {
-              Authorization: "KakaoAK 815a330dcfb69987a6c219836b68598c"  // 여기에 본인의 카카오 API 키 넣기
+              Authorization: "KakaoAK 815a330dcfb69987a6c219836b68598c"
             }
           });
 
           if (response.data.documents.length > 0) {
             const regionName = response.data.documents[0].region_3depth_name;
-            setLocation(regionName);  // 동 이름으로 표시
+            setLocation(regionName);
           } else {
             setLocation("지역 정보를 불러올 수 없습니다.");
           }
@@ -66,16 +66,31 @@ function HomePage() {
 
   return (
     <div className="page-container">
-      <h1 className="page-title"><span>오늘의</span> 먹방은</h1>
-
-      <img src="/chef.png" alt="Chef" className="home-image" />
+      <h1 className="page-title">
+        <span className="word-first">오늘의</span> 
+        <span className="word-middle"> 먹방</span>
+        <span className="word-end">은</span>
+      </h1>
+      
+      <div className="chef-container">
+        <img src="/movetomypage.png" alt="Chef" className="home-image" />
+      </div>
+      
       <h2 className="nickname">{nickname}</h2>
-
+      
       <button className="location-button">{location}</button>
-      <button className="common-button" onClick={() => navigate("/menu-recommend")}>메뉴 추천</button>
+      
+      <button className="menu-recommend-button" onClick={() => navigate("/menu-recommend")}>
+        메뉴 추천
+      </button>
 
       <div className="home-buttons">
-        <button className="home-sub-button" onClick={() => navigate("/quickpick-loading")}>퀵픽</button>
+        <button className="home-sub-button chatbot" onClick={() => navigate("/chatbot")}>
+          챗봇
+        </button>
+        <button className="home-sub-button quickpick" onClick={() => navigate("/quickpick-loading")}>
+          퀵픽
+        </button>
       </div>
     </div>
   );

@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ChatBotPage.css";
 
 function ChatBotPage() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { type: "bot", text: "안녕하세요, 쫩쫩이입니다. 어떤 메뉴를 추천해드릴까요?" }
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate(); 
+
 
   const userProfile = "알레르기: 없음 / 예산: 1~2만원 / 혼밥: 혼자";
   const weather = "비오는 날";
@@ -69,25 +75,64 @@ function ChatBotPage() {
 
   return (
     <div className="chat-container">
-      <h2>🍽️ 오늘 뭐 먹지? (AI 메뉴 추천 쫩쫩이)</h2>
+      <div className="chat-header">
+        <h1>
+          <span className="text-pink">오늘의</span>
+          <span className="text-brown"> 먹방</span>
+          <span className="text-pink">은</span>
+        </h1>
+      </div>
+
       <div className="chat-box">
-        {messages.map((msg, idx) => (
-          <div key={idx} className={msg.type}>
-            <p><strong>{msg.type === "user" ? "나" : "쫩쫩이"}</strong>: {msg.text}</p>
-          </div>
-        ))}
-        {isLoading && <p><strong>쫩쫩이</strong>: 추천하는 중입니다... 🍜</p>}
+        <div className="chat-messages">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`message ${msg.type}`}>
+              {msg.type === "bot" && (
+                <div className="chat-profile">
+                  <div className="profile-wrapper">
+                    <img src="/chatbot.png" alt="쫩쫩이" className="profile-img" />
+                  </div>
+                </div>
+              )}
+              <div className="message-content">{msg.text}</div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="message bot">
+              <div className="chat-profile">
+                <div className="profile-wrapper">
+                  <img src="/chatbot.png" alt="쫩쫩이" className="profile-img" />
+                </div>
+              </div>
+              <div className="message-content">추천하는 중입니다... 🍜</div>
+            </div>
+          )}
+        </div>
+
+        <div className="chat-input-container">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="눌러서 쫩쫩이에게 메뉴 추천받기"
+            className="chat-input"
+          />
+          <button onClick={sendMessage} className="send-button">➤</button>
+        </div>
       </div>
-      <div className="chat-input">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="추천 받고 싶은 메뉴를 입력해보세요"
-        />
-        <button onClick={sendMessage}>보내기</button>
-      </div>
+
+      <nav className="bottom-nav">
+        <button className="nav-button" onClick={() => navigate("/home")}>
+          <img src="/home.png" alt="홈" className="nav-icon" />
+        </button>
+        <button className="nav-button" onClick={() => navigate("/menu-result")}>
+          <span className="bookmark-icon">📁</span>
+        </button>
+        <button className="nav-button" onClick={() => navigate("/mypage")}>
+          <img src="/movetomypage.png" alt="마이페이지" className="nav-icon" />
+        </button>
+      </nav>
     </div>
   );
 }

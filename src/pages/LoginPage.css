@@ -1,34 +1,72 @@
 .login-container {
-    text-align: center;
-    padding: 50px;
-  }
-  
-  .login-title {
-    font-size: 32px;
-    margin-bottom: 20px;
-  }
-  
-  .login-input {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    width: 250px;
-    font-size: 16px;
-  }
-  
-  .login-button-group {
-    margin-top: 20px;
-  }
-  
-  .login-button, .register-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #FFF8F0;
+  min-height: 100vh;
+}
+
+.login-title {
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #7A4E29;
+  font-family: 'Hakgyoansim-Bold';
+}
+
+.login-input {
+  display: block;
+  margin: 15px auto;
+  padding: 12px 20px;
+  width: 280px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #F2B9C2;
+  box-shadow: 0 0 8px rgba(242, 185, 194, 0.4);
+}
+
+.login-button-group {
+  margin-top: 30px;
+}
+
+.login-button, .register-button {
+  padding: 12px 30px;
+  margin: 0 10px;
+  font-size: 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
+}
+
+.login-button {
+  background-color: #F2B9C2;
+  color: white;
+}
+
+.register-button {
+  background-color: white;
+  color: #A77E5A;
+  border: 1px solid #A77E5A;
+}
+
+.login-button:hover {
+  background-color: #e6aab5;
+}
+
+.register-button:hover {
+  background-color: #fdf4f0;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}

@@ -11,7 +11,7 @@ import MenuRecommendPage from './pages/MenuRecommendPage';
 import QuickPickLoadingPage from './pages/QuickPickLoadingPage';
 import QuickPickResultPage from './pages/QuickPickResultPage';
 import MenuResultPage from './pages/MenuResultPage';
-import AiRecommendPage from './pages/AiRecommendPage'; // ✅ 추가
+import AiRecommendPage from './pages/AiRecommendPage';
 import LoginPage from './pages/LoginPage';
 import { UserDataProvider } from './UserDataContext';
 import ChatBotPage from './pages/ChatBotPage';

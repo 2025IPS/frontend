@@ -58,30 +58,52 @@
     font-size: 14px;
     color: #A77E5A;
     text-align: center;
+    line-height: 1.6;
+}
+
+.description .nickname {
+    color: #C48D99;
+    font-weight: bold;
+}
+
+.description .percentage {
+    color: #C48D99;
+    font-weight: bold;
+}
+
+.description .detail-link {
+    display: block;
+    margin-top: 10px;
+    color: #A77E5A;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .result-buttons {
     display: flex;
     gap: 20px;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
-.home-sub-button, .common-button {
+.result-buttons .common-button {
     padding: 12px 30px;
     font-size: 16px;
     border-radius: 25px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
 }
 
-.home-sub-button {
+.result-buttons .other-menu {
     background-color: white;
     color: #A77E5A;
+    border: 1px solid #A77E5A;
 }
 
-.common-button {
+.result-buttons .main-button {
     background-color: #F2B9C2;
     color: white;
 }

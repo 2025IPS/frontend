@@ -15,6 +15,7 @@ import AiRecommendPage from './pages/AiRecommendPage';
 import LoginPage from './pages/LoginPage';
 import { UserDataProvider } from './UserDataContext';
 import ChatBotPage from './pages/ChatBotPage';
+import ReviewPage from './pages/ReviewPage'; // ✅ 추가 (ReviewPage import)
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/menu-result" element={<MenuResultPage />} />
           <Route path="/ai-recommend" element={<AiRecommendPage />} />
           <Route path="/chatbot" element={<ChatBotPage />} />
+          <Route path="/review" element={<ReviewPage />} /> {/* 추가 (라우터 등록) */}
         </Routes>
       </Router>
     </UserDataProvider>

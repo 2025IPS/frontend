@@ -77,11 +77,21 @@ function Mypage() {
 
     const saveData = {
       username,
-      allergies: allergy.join(","),
+      allergies: allergy.join(","),         // 서버로 전송용 (문자열)
+      diseases: disease.join(","),          // ✅ 추가: 지병도 서버로 저장
       preferred_menu: preferredMenu.join(","),
       disliked_menu: dislikedMenu.join(","),
     };
 
+    // 📌 LocalStorage에 저장 (MenuRecommendPage에서 사용 가능하도록)
+    const userProfile = {
+      username,
+      allergies: allergy,                   // 리스트 형태로 저장
+      diseases: disease                     // 리스트 형태로 저장
+    };
+    localStorage.setItem("userProfile", JSON.stringify(userProfile));
+
+    // 서버 저장
     axios.post("http://localhost:8000/mypage/update", saveData)
       .then(() => {
         alert("저장되었습니다!");

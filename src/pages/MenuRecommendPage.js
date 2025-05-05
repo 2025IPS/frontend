@@ -29,7 +29,21 @@ function MenuRecommendPage() {
 
   const handleRecommend = async () => {
     setIsLoading(true);
-    const recommendInfo = { region, alone, budget, drink, hunger };
+
+    // ✅ userProfile에서 알러지와 지병 가져오기
+    const userProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
+    const allergies = userProfile.allergies || [];
+    const diseases = userProfile.diseases || [];
+
+    const recommendInfo = { 
+      region, 
+      alone, 
+      budget, 
+      drink, 
+      hunger,
+      allergies,   // 추가
+      diseases     // 추가
+    };
 
     try {
       localStorage.setItem("recommendInfo", JSON.stringify(recommendInfo));

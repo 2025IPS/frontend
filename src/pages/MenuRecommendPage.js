@@ -29,21 +29,11 @@ function MenuRecommendPage() {
 
   const handleRecommend = async () => {
     setIsLoading(true);
-
-    // ✅ userProfile에서 알러지와 지병 가져오기
     const userProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
     const allergies = userProfile.allergies || [];
     const diseases = userProfile.diseases || [];
 
-    const recommendInfo = { 
-      region, 
-      alone, 
-      budget, 
-      drink, 
-      hunger,
-      allergies,   // 추가
-      diseases     // 추가
-    };
+    const recommendInfo = { region, alone, budget, drink, hunger, allergies, diseases };
 
     try {
       localStorage.setItem("recommendInfo", JSON.stringify(recommendInfo));
@@ -73,35 +63,31 @@ function MenuRecommendPage() {
       </h1>
 
       <div className="options-section">
-        <div className="option">
+        <div className="option region-option">
           <div className="option-title">지역</div>
-          <select value={region} onChange={(e) => setRegion(e.target.value)} className="select-box">
-            <option value="갈월동">갈월동</option>
-            <option value="청파동">청파동</option>
-            <option value="효창동">효창동</option>
-            <option value="남영동">남영동</option>
-          </select>
+          <div className="select-wrapper">
+            <select value={region} onChange={(e) => setRegion(e.target.value)} className="select-box">
+              <option value="갈월동">갈월동</option>
+              <option value="청파동">청파동</option>
+              <option value="효창동">효창동</option>
+              <option value="남영동">남영동</option>
+            </select>
+            <img src="/select.png" alt="선택" className="select-icon" />
+          </div>
         </div>
 
         <div className="option">
           <div className="option-title">혼밥</div>
-          <div className="button-group">
-            {["혼자", "같이"].map(item => (
-              <button 
-                key={item} 
-                className={`alone-button ${alone === item ? "active" : ""}`} 
-                onClick={() => setAlone(item)}
-              >
-                {item}
-              </button>
-            ))}
+          <div className="toggle-box">
+            <button className={`toggle-option ${alone === "혼자" ? "active" : ""}`} onClick={() => setAlone("혼자")}>혼자</button>
+            <button className={`toggle-option ${alone === "같이" ? "active" : ""}`} onClick={() => setAlone("같이")}>같이</button>
           </div>
         </div>
 
         <div className="option">
           <div className="option-title">예산</div>
           <div className="button-group">
-            {["1만원 미만", "1~2만원", "2~3만원", "3~4만원"].map(item => (
+            {["1만원 미만", "1~2만원", "2~3만원", "3~4만원", "4만원 이상"].map(item => (
               <button key={item} className={budget === item ? "active" : ""} onClick={() => setBudget(item)}>{item}</button>
             ))}
           </div>
@@ -119,7 +105,10 @@ function MenuRecommendPage() {
                 <div className="sub-title">음주</div>
                 <div className="button-group">
                   {["없음", "소주", "맥주", "와인"].map(item => (
-                    <button key={item} className={drink === item ? "active" : ""} onClick={() => setDrink(item)}>{item}</button>
+                    <button key={item} className={drink === item ? "active" : ""} onClick={() => setDrink(item)}>
+                      <img src={`/${item}.png`} alt={item} className="drink-icon" />
+                      {item}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -143,35 +132,14 @@ function MenuRecommendPage() {
         </div>
       </div>
 
-      <div className="chat-section">
-        <div className="section-title">챗봇</div>
-        <div className="chat-box">
-          <div className="chatbox-image-wrapper">
-            <div className="chatbox-image-bg"></div>
-            <img src="/chatbot.png" alt="쫩쫩이" className="chatbox-image" />
-          </div>
-
-          <div className="chat-content">
-            <span className="chat-header">쫩쫩이</span>
-            <div className="chat-message">안녕하세요 쫩쫩이입니다!<br />오늘은 어떤 먹방을 해볼까요?</div>
-          </div>
-        </div>
-
-        <div className="chat-input-section">
-          <div className="chat-input-wrapper" onClick={() => navigate("/chatbot")}>
-            <input 
-              className="chat-input" 
-              placeholder="눌러서 쫩쫩이와 채팅 시작하기 →" 
-              readOnly 
-            />
-          </div>
-        </div>
-      </div>
-
       <div className="navigation-tabs">
-        <button className="nav-tab home" onClick={() => navigate("/home")}>🏠</button>
-        <button className="nav-tab bookmark">🔖</button>
-        <button className="nav-tab profile" onClick={() => navigate("/mypage")}>👩</button>
+        <button className="nav-tab" onClick={() => navigate("/home")}>
+          <img src="/home.png" alt="홈" className="tab-icon" />
+        </button>
+        <button className="nav-tab" onClick={() => navigate("/chatbot")}>
+          <img src="/movetomypage.png" alt="챗봇" className="tab-icon" />
+        </button>
+        <button className="nav-tab" onClick={() => navigate("/mypage")}>👩</button>
       </div>
     </div>
   );

@@ -18,6 +18,10 @@
     text-align: center;
     width: 300px;
   }
+
+  .modal-content p{
+    word-break: keep-all;
+  }
   
   .close-button {
     margin-top: 20px;

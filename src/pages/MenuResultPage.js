@@ -12,7 +12,7 @@ function MenuResultPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ 로컬스토리지에서 추천 정보 불러오기 (location.state는 새로고침하면 날아감)
+  // ✅ 로컬스토리지에서 추천 정보 불러오기
   const savedInfo = JSON.parse(localStorage.getItem("recommendInfo"));
 
   useEffect(() => {
@@ -52,6 +52,7 @@ function MenuResultPage() {
     window.location.reload();  // 새로고침으로 재시도
   };
 
+  // ✅ 로딩 상태
   if (loading) {
     return (
       <div className="result-container">
@@ -61,6 +62,7 @@ function MenuResultPage() {
     );
   }
 
+  // ✅ 에러 상태
   if (error) {
     return (
       <div className="result-container">
@@ -71,6 +73,14 @@ function MenuResultPage() {
     );
   }
 
+  // ✅ 이미지 파일명 가공
+  const imageFileName = `${recommendation.place_name}_${recommendation.menu_name}`
+    .replace(/\s+/g, "_")
+    .replace(/[()]/g, "")
+    .replace(/[^a-zA-Z0-9가-힣_]/g, "");
+
+  const imagePath = `/menu-images/${imageFileName}.jpg`;
+
   return (
     <div className="result-container">
       <h1 className="result-title">메뉴 추천 완료 !</h1>
@@ -79,9 +89,10 @@ function MenuResultPage() {
 
       <div className="result-image-box">
         <img
-          src="https://i.ibb.co/wMpkJpg/sample-samgyeopsal.jpg"
-          alt="메뉴 이미지"
+          src={imagePath}
+          alt={recommendation.menu_name}
           className="result-image"
+          onError={(e) => { e.target.src = "/menu-images/기타.jpg"; }}
         />
         <div className="result-restaurant-info">
           <h3>{recommendation.place_name}</h3>
@@ -102,7 +113,7 @@ function MenuResultPage() {
 
       <div className="bottom-nav">
         <button onClick={() => navigate("/")}>홈</button>
-        <button>저장</button>
+        <button onClick={() => navigate("/chatbot")}>챗봇</button>
         <button onClick={() => navigate("/mypage")}>마이페이지</button>
       </div>
     </div>

@@ -9,7 +9,11 @@ function PreferencePage() {
 
   const items = [
     { name: "고기", image: "/고기.png" },
-    { name: "버섯", image: "/버섯.png" }
+    { name: "버섯", image: "/버섯.png" },
+    { name: "고수", image: "/고수.png" },
+    { name: "내장", image: "/내장.png" },
+    { name: "닭발", image: "/닭발.png" },
+    { name: "해산물", image: "/해산물.png" }
   ];
 
   const [preferences, setPreferences] = useState({});

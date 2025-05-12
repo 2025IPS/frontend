@@ -20,7 +20,7 @@ function Mypage() {
 
   const allergyOptions = ["달걀", "갑각류", "밀", "땅콩/대두", "고기", "콩", "우유"];
   const diseaseOptions = ["고혈압", "저혈압", "당뇨", "신장질환"];
-  const menuOptions = ["고기", "버섯"];
+  const menuOptions = ["고기", "버섯","고수","내장","닭발","해산물"];
 
   const [modalInfo, setModalInfo] = useState({ isOpen: false, title: "", options: [], onSelect: () => {} });
 
@@ -78,7 +78,7 @@ function Mypage() {
     const saveData = {
       username,
       allergies: allergy.join(","),         // 서버로 전송용 (문자열)
-      diseases: disease.join(","),          // ✅ 추가: 지병도 서버로 저장
+      diseases: disease.join(","),          // 추가: 지병도 서버로 저장
       preferred_menu: preferredMenu.join(","),
       disliked_menu: dislikedMenu.join(","),
     };

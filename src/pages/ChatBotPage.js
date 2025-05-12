@@ -4,13 +4,12 @@ import "./ChatBotPage.css";
 
 function ChatBotPage() {
   const [messages, setMessages] = useState([
-    { type: "bot", text: "안녕하세요, 쫩쫩이입니다. 어떤 메뉴를 추천해드릴까요?" }
+    { type: "bot", text: "안녕하세요, 쫩쫩이입니다. \n 어떤 메뉴를 추천해드릴까요?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate(); 
-
 
   const userProfile = "알레르기: 없음 / 예산: 1~2만원 / 혼밥: 혼자";
   const weather = "비오는 날";

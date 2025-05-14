@@ -20,11 +20,14 @@ const INGREDIENT_CATEGORIES = {
 };
 
 const DISEASE_RULES = {
-  "고혈압": ["간장", "된장", "햄", "소시지", "소금", "고기", "곱창", "내장"],
+  "고혈압": ["간장", "된장", "햄", "소시지", "소금", "고기", "곱창", "내장", "삼겹살"],
   "저혈압": ["커피", "콜라", "에너지음료"],
   "당뇨": ["설탕", "시럽", "크림", "케이크", "빵"],
   "신장질환": ["된장", "소금", "소시지", "햄", "고기", "치즈"]
 };
+
+const ALLERGY_GROUPS = ["달걀", "갑각류", "밀", "땅콩/대두", "고기", "콩", "우유"];
+const DISEASE_GROUPS = Object.keys(DISEASE_RULES);
 
 function normalize(str) {
   return str.trim().toLowerCase();
@@ -32,67 +35,51 @@ function normalize(str) {
 
 function categorizeIngredient(ingredient, preferences) {
   const normalized = normalize(ingredient);
+  const normalizedAllergies = (preferences.allergies || preferences.allergy || []).map(normalize);
+  const normalizedDiseases = (preferences.diseases || preferences.disease || []).map(normalize);
+
   for (const category in INGREDIENT_CATEGORIES) {
     const words = INGREDIENT_CATEGORIES[category].map(normalize);
     if (words.includes(normalized)) {
+      const isAllergy = normalizedAllergies.includes(normalize(category));
+      const restrictedBy = normalizedDiseases.filter(disease => (DISEASE_RULES[disease] || []).map(normalize).includes(normalized));
+
+      if (ALLERGY_GROUPS.map(normalize).includes(normalize(category)) && isAllergy) {
+        console.log(`⚠️ 알러지 분류: ${ingredient} (${category})`);
+      }
+      if (restrictedBy.length > 0) {
+        console.log(`⚠️ 질병 분류: ${ingredient} → ${restrictedBy.join(", ")}`);
+      }
+
       return {
         category,
-        like: preferences.likes.includes(category),
-        dislike: preferences.dislikes.includes(category),
-        allergy: preferences.allergies?.includes(category),
-        restrictedBy: preferences.diseases?.filter(disease => (DISEASE_RULES[disease] || []).includes(normalized)) || []
+        like: preferences.likes?.includes(category),
+        dislike: preferences.dislikes?.includes(category),
+        allergy: isAllergy,
+        restrictedBy
       };
     }
   }
+
+  const fallbackRestrictions = normalizedDiseases.filter(disease => (DISEASE_RULES[disease] || []).map(normalize).includes(normalized));
+  if (fallbackRestrictions.length > 0) {
+    console.log(`⚠️ 질병 분류(카테고리 없음): ${ingredient} → ${fallbackRestrictions.join(", ")}`);
+  }
+
   return {
     category: null,
     like: false,
     dislike: false,
     allergy: false,
-    restrictedBy: preferences.diseases?.filter(disease => (DISEASE_RULES[disease] || []).includes(normalized)) || []
+    restrictedBy: fallbackRestrictions
   };
-}
-
-function calculatePreferencePercentage(menu, preferences) {
-  let score = 40;
-  let totalPenalty = 0;
-  let likeBonus = 0;
-  let hasSevereRestriction = false;
-
-  menu.ingredients.forEach(ingredient => {
-    const result = categorizeIngredient(ingredient, preferences);
-
-    if (result.restrictedBy.length > 0) {
-      totalPenalty += result.restrictedBy.length * 20;
-      hasSevereRestriction = true;
-    }
-    if (result.allergy) {
-      totalPenalty += 30;
-      hasSevereRestriction = true;
-    }
-    if (result.dislike) {
-      totalPenalty += 15;
-    }
-    if (result.like) {
-      likeBonus += 30;
-    }
-  });
-
-  if (!hasSevereRestriction) {
-    score += likeBonus;
-  }
-
-  score -= totalPenalty;
-  score += Math.floor(Math.random() * 11) - 5;
-
-  return Math.max(0, Math.min(score, 100));
 }
 
 function getReason(menu, preferences) {
   const liked = new Set();
   const disliked = new Set();
   const allergic = new Set();
-  const restricted = new Set();
+  const restricted = new Map();
 
   menu.ingredients.forEach(ing => {
     const analysis = categorizeIngredient(ing, preferences);
@@ -100,26 +87,48 @@ function getReason(menu, preferences) {
     if (analysis.dislike) disliked.add(ing);
     if (analysis.allergy) allergic.add(ing);
     analysis.restrictedBy.forEach(disease => {
-      restricted.add(`${ing}(${disease})`);
+      restricted.set(ing, disease);
     });
   });
 
-  let reason = "";
-  if (liked.size > 0) reason += `좋아하는 재료(${Array.from(liked).join(", ")})가 포함되어 있습니다.\n`;
-  if (disliked.size > 0) reason += `싫어하는 재료(${Array.from(disliked).join(", ")})가 포함되어 있습니다.\n`;
-  if (allergic.size > 0) reason += `알러지 주의 재료(${Array.from(allergic).join(", ")})가 포함되어 있습니다.\n`;
-  if (restricted.size > 0) reason += `지병 관련 주의 재료(${Array.from(restricted).join(", ")})가 포함되어 있습니다.\n`;
+  return {
+    liked: Array.from(liked),
+    disliked: Array.from(disliked),
+    allergic: Array.from(allergic),
+    restricted: Array.from(restricted.entries())
+  };
+}
 
-  return reason || "선호, 알러지 또는 질병 관련 재료가 없는 중간 정도의 메뉴입니다.";
+function calculatePreferencePercentage(menu, preferences) {
+  for (const ingredient of menu.ingredients) {
+    const result = categorizeIngredient(ingredient, preferences);
+    if (result.restrictedBy.length > 0 || result.allergy) return 0;
+  }
+
+  let score = 40;
+  let totalPenalty = 0;
+  let likeBonus = 0;
+
+  for (const ingredient of menu.ingredients) {
+    const result = categorizeIngredient(ingredient, preferences);
+    if (result.dislike) totalPenalty += 15;
+    if (result.like) likeBonus += 30;
+  }
+
+  score += likeBonus - totalPenalty;
+  score += Math.floor(Math.random() * 11) - 5;
+  return Math.max(0, Math.min(score, 100));
 }
 
 export {
   INGREDIENT_CATEGORIES,
   DISEASE_RULES,
+  ALLERGY_GROUPS,
+  DISEASE_GROUPS,
   normalize,
   categorizeIngredient,
-  calculatePreferencePercentage,
-  getReason
+  getReason,
+  calculatePreferencePercentage
 };
 
 function QuickPickResultPage() {
@@ -138,9 +147,16 @@ function QuickPickResultPage() {
     { name: "쌀국수", image: "/pho.png", ingredients: ["소고기", "숙주", "고수", "면", "밀"] },
     { name: "무뼈닭발", image: "/dakbal.png", ingredients: ["닭발", "고기", "고추장"] },
     { name: "해물찜", image: "/haemuljjim.png", ingredients: ["새우", "꽃게", "문어"] },
-    { name: "계란말이", image: "/eggroll.png", ingredients: ["계란", "지단", "마요네즈"] },
-    { name: "두부조림", image: "/tofu.png", ingredients: ["두부", "간장", "된장", "콩"] },
-    { name: "크림파스타", image: "/cream_pasta.png", ingredients: ["면", "우유", "치즈", "크림"] }
+    { name: "스시", image: "/eggroll.png", ingredients: ["해산물"] },
+    { name: "양꼬치", image: "/tofu.png", ingredients: ["양고기", "고기"] },
+    { name: "크림파스타", image: "/cream_pasta.png", ingredients: ["면", "우유", "치즈", "크림"] },
+    { name: "버거", image: "/burger.png", ingredients: ["빵", "고기", "치즈", "소스"] },
+    { name: "치킨", image: "/chicken.png", ingredients: ["닭고기", "튀김옷", "고기", "밀"] },
+    { name: "짜장면", image: "/jajangmyeon.png", ingredients: ["면", "춘장", "고기", "밀"] },
+    { name: "떡볶이", image: "/tteokbokki.png", ingredients: ["떡", "고추장", "밀"] },
+    { name: "마라탕", image: "/malatang.png", ingredients: ["고기", "버섯", "양고기", "고수"] },
+    { name: "찜닭", image: "/jjimdak.png", ingredients: ["닭고기", "간장", "고기"] },
+    { name: "육회비빔밥", image: "/yukhoe_bibimbap.png", ingredients: ["육회", "밥", "고기", "달걀"] }
   ];
 
   const username = localStorage.getItem("username");
@@ -164,6 +180,12 @@ function QuickPickResultPage() {
         setPreferences({ likes: [], dislikes: [] });
       });
   }, [username]);
+
+  useEffect(() => {
+  if (!preferences) return;
+  console.log("✅ [디버깅] preferences 데이터:", preferences);
+  window.debugPreferences = preferences; // 콘솔에서 접근 가능
+}, [preferences]);  
 
   useEffect(() => {
     if (!preferences) return;

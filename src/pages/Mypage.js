@@ -83,7 +83,7 @@ function Mypage() {
       disliked_menu: dislikedMenu.join(","),
     };
 
-    // 📌 LocalStorage에 저장 (MenuRecommendPage에서 사용 가능하도록)
+    //  LocalStorage에 저장 (MenuRecommendPage에서 사용 가능하도록)
     const userProfile = {
       username,
       allergies: allergy,                   // 리스트 형태로 저장

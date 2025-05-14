@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MenuResultPage.css';
 
-// ✅ API Base URL
 const API_BASE_URL = "http://localhost:8000/api";
 
 function MenuResultPage() {
@@ -12,7 +11,6 @@ function MenuResultPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ 로컬스토리지에서 추천 정보 불러오기
   const savedInfo = JSON.parse(localStorage.getItem("recommendInfo"));
 
   useEffect(() => {
@@ -49,10 +47,34 @@ function MenuResultPage() {
   }, []);
 
   const handleRetry = () => {
-    window.location.reload();  // 새로고침으로 재시도
+    window.location.reload();
   };
 
-  // ✅ 로딩 상태
+  const handleFeedback = (type) => {
+    if (!recommendation) return;
+
+    fetch(`${API_BASE_URL}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        place_name: recommendation.place_name,
+        menu_name: recommendation.menu_name,
+        feedback: type
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("피드백 전송 실패");
+        return res.json();
+      })
+      .then(() => {
+        alert("피드백이 반영되었습니다!");
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("피드백 전송에 실패했습니다.");
+      });
+  };
+
   if (loading) {
     return (
       <div className="result-container">
@@ -62,7 +84,6 @@ function MenuResultPage() {
     );
   }
 
-  // ✅ 에러 상태
   if (error) {
     return (
       <div className="result-container">
@@ -73,7 +94,6 @@ function MenuResultPage() {
     );
   }
 
-  // ✅ 이미지 파일명 가공
   const imageFileName = `${recommendation.place_name}_${recommendation.menu_name}`
     .replace(/\s+/g, "_")
     .replace(/[()]/g, "")
@@ -84,7 +104,6 @@ function MenuResultPage() {
   return (
     <div className="result-container">
       <h1 className="result-title">메뉴 추천 완료 !</h1>
-
       <h2 className="result-menu">{recommendation.menu_name}</h2>
 
       <div className="result-image-box">
@@ -106,6 +125,15 @@ function MenuResultPage() {
           <div className="tags">
             <a href={recommendation.url} target="_blank" rel="noreferrer" className="tag">네이버에서 보기</a>
           </div>
+        </div>
+      </div>
+
+      <div className="feedback-buttons">
+        <div className="feedback-button" onClick={() => handleFeedback("good")}>
+          <img src="/icons/good.png" alt="좋아요" />
+        </div>
+        <div className="feedback-button" onClick={() => handleFeedback("bad")}>
+          <img src="/icons/bad.png" alt="싫어요" />
         </div>
       </div>
 

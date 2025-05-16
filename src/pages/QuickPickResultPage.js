@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './QuickPickResultPage.css';
 import MenuDetailModal from '../components/MenuDetailModal';
 import axios from 'axios';
+import { API_BASE_URL } from '../api/api';
 
 const INGREDIENT_CATEGORIES = {
   "달걀": ["계란", "달걀", "에그", "지단", "오믈렛", "스크램블", "에그마요", "계란찜", "계란말이", "계란후라이", "계란볶음", "달걀찜", "타마고", "계란탕", "계란국", "에그드랍", "깜파뉴", "마요네즈", "계란구이", "전", "부침", "에그베네딕트", "휘낭시에", "쿠키", "돈가스", "김밥"],
@@ -163,14 +164,14 @@ function QuickPickResultPage() {
 
   useEffect(() => {
     if (!username) return;
-    axios.get(`http://localhost:8000/user/${username}`)
+    axios.get(`${API_BASE_URL}/user/${username}`)
       .then(res => setNickname(res.data.name || username))
       .catch(err => console.error("유저 정보 불러오기 실패:", err));
   }, [username]);
 
   useEffect(() => {
     if (!username) return;
-    axios.get(`http://localhost:8000/mypage/${username}`)
+    axios.get(`${API_BASE_URL}/mypage/${username}`)
       .then(res => {
         setPreferences(res.data.preferences);
         localStorage.setItem("userPreferences", JSON.stringify(res.data.preferences));
@@ -183,7 +184,7 @@ function QuickPickResultPage() {
 
   useEffect(() => {
   if (!preferences) return;
-  console.log("✅ [디버깅] preferences 데이터:", preferences);
+  console.log("[디버깅] preferences 데이터:", preferences);
   window.debugPreferences = preferences; // 콘솔에서 접근 가능
 }, [preferences]);  
 

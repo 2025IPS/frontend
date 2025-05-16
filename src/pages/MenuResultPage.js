@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MenuResultPage.css';
-
-const API_BASE_URL = "http://localhost:8000/api";
+import { API_BASE_URL } from '../api/api';
 
 function MenuResultPage() {
   const navigate = useNavigate();
@@ -10,6 +9,7 @@ function MenuResultPage() {
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageSrc, setImageSrc] = useState(""); // 이미지 경로 상태 추가
 
   const savedInfo = JSON.parse(localStorage.getItem("recommendInfo"));
 
@@ -45,6 +45,38 @@ function MenuResultPage() {
         setLoading(false);
       });
   }, []);
+
+  // 이미지 파일 경로 설정 (jpg, jpeg, png 지원)
+  useEffect(() => {
+    if (!recommendation) return;
+
+    const baseFileName = `${recommendation.place_name}_${recommendation.menu_name}`
+      .replace(/\s+/g, "_")
+      .replace(/[()]/g, "")
+      .replace(/[^a-zA-Z0-9가-힣_]/g, "");
+
+    const extensions = [".jpg", ".jpeg", ".png"];
+    let found = false;
+
+    (async () => {
+      for (const ext of extensions) {
+        const url = `/menu-images/${baseFileName}${ext}`;
+        try {
+          const res = await fetch(url, { method: "HEAD" });
+          if (res.ok) {
+            setImageSrc(url);
+            found = true;
+            break;
+          }
+        } catch (e) {
+          // 무시하고 다음 확장자 시도
+        }
+      }
+      if (!found) {
+        setImageSrc("/menu-images/기타.jpg");
+      }
+    })();
+  }, [recommendation]);
 
   const handleRetry = () => {
     window.location.reload();
@@ -87,19 +119,12 @@ function MenuResultPage() {
   if (error) {
     return (
       <div className="result-container">
-        <h1>에러 발생 ⚡</h1>
+        <h1>에러 발생</h1>
         <p>{error}</p>
         <button onClick={handleRetry}>다시 시도하기</button>
       </div>
     );
   }
-
-  const imageFileName = `${recommendation.place_name}_${recommendation.menu_name}`
-    .replace(/\s+/g, "_")
-    .replace(/[()]/g, "")
-    .replace(/[^a-zA-Z0-9가-힣_]/g, "");
-
-  const imagePath = `/menu-images/${imageFileName}.jpg`;
 
   return (
     <div className="result-container">
@@ -108,10 +133,9 @@ function MenuResultPage() {
 
       <div className="result-image-box">
         <img
-          src={imagePath}
+          src={imageSrc}
           alt={recommendation.menu_name}
           className="result-image"
-          onError={(e) => { e.target.src = "/menu-images/기타.jpg"; }}
         />
         <div className="result-restaurant-info">
           <h3>{recommendation.place_name}</h3>
@@ -139,10 +163,16 @@ function MenuResultPage() {
 
       <button className="other-button" onClick={() => navigate(-1)}>다른 메뉴 추천</button>
 
-      <div className="bottom-nav">
-        <button onClick={() => navigate("/")}>홈</button>
-        <button onClick={() => navigate("/chatbot")}>챗봇</button>
-        <button onClick={() => navigate("/mypage")}>마이페이지</button>
+      <div className="navigation-tabs">
+          <button className="nav-tab" onClick={() => navigate("/home")}>
+          <img src="/home.png" alt="홈" className="tab-icon" />
+        </button>
+        <button className="nav-tab" onClick={() => navigate("/chatbot")}>
+          <img src="/movetomypage.png" alt="챗봇" className="tab-icon" />
+        </button>
+        <button className="nav-tab" onClick={() => navigate("/mypage")}>
+          <img src="/mypage.png" alt="마이페이지" className="tab-icon" />
+        </button>
       </div>
     </div>
   );

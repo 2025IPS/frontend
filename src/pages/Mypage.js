@@ -4,11 +4,11 @@ import Modal from '../components/Modal';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUserData } from '../UserDataContext';
+import { API_BASE_URL } from '../api/api';
 
 function Mypage() {
   const navigate = useNavigate();
 
-  // Context에서 사용자 데이터 가져오기
   const {
     allergy, setAllergy,
     disease, setDisease,
@@ -20,30 +20,42 @@ function Mypage() {
 
   const allergyOptions = ["달걀", "갑각류", "밀", "땅콩/대두", "고기", "콩", "우유"];
   const diseaseOptions = ["고혈압", "저혈압", "당뇨", "신장질환"];
-  const menuOptions = ["고기", "버섯","고수","내장","닭발","해산물"];
+  const menuOptions = ["고기", "버섯", "고수", "내장", "닭발", "해산물"];
 
   const [modalInfo, setModalInfo] = useState({ isOpen: false, title: "", options: [], onSelect: () => {} });
 
-  // 사용자 데이터 불러오기
   useEffect(() => {
     if (!username) return;
 
-    axios.get(`http://localhost:8000/user/${username}`)
+    axios.get(`${API_BASE_URL}/user/${username}`)
       .then(res => {
-        setAllergy(res.data.allergies ?? []);
-        setDisease(res.data.diseases ?? []);
-        setPreferredMenu(res.data.preferred_menu ?? []);
-        setDislikedMenu(res.data.disliked_menu ?? []);
+        console.log("서버로부터 받은 유저 데이터:", res.data);
+
+        const toArray = (value) =>
+          typeof value === 'string'
+            ? value.split(',').map(v => v.trim()).filter(Boolean)
+            : Array.isArray(value)
+            ? value
+            : [];
+
+        setAllergy(toArray(res.data.allergies));
+        setDisease(toArray(res.data.diseases));
+        setPreferredMenu(toArray(res.data.preferred_menu));   // 필드명 정확히 맞춤
+        setDislikedMenu(toArray(res.data.disliked_menu));
       })
-      .catch(err => console.error("유저 데이터 불러오기 실패:", err));
+      .catch(err => {
+        console.error("유저 데이터 불러오기 실패:", err);
+        setAllergy([]);
+        setDisease([]);
+        setPreferredMenu([]);
+        setDislikedMenu([]);
+      });
   }, [username, setAllergy, setDisease, setPreferredMenu, setDislikedMenu]);
 
-  // 태그 삭제
   const removeItem = (list, setList, item) => {
     setList(list.filter(i => i !== item));
   };
 
-  // 모달 열기
   const openModal = (title, options, list, setList) => {
     const available = options.filter(o => !list.includes(o));
     if (available.length === 0) {
@@ -62,37 +74,31 @@ function Mypage() {
     });
   };
 
-  // 모달 닫기
   const closeModal = () => {
     setModalInfo({ ...modalInfo, isOpen: false });
   };
 
-  // 저장하기
   const handleSave = () => {
-    if (!username) {
-      console.error("사용자 정보가 없습니다. 로그인이 필요합니다.");
+    if (!username || username.trim() === "") {
       alert("사용자 정보가 없습니다. 로그인이 필요합니다.");
       return;
     }
 
     const saveData = {
       username,
-      allergies: allergy.join(","),         // 서버로 전송용 (문자열)
-      diseases: disease.join(","),          // 추가: 지병도 서버로 저장
-      preferred_menu: preferredMenu.join(","),
-      disliked_menu: dislikedMenu.join(","),
+      allergies: Array.isArray(allergy) ? allergy.join(', ') : "",
+      diseases: Array.isArray(disease) ? disease.join(', ') : "",
+      preferred_menu: Array.isArray(preferredMenu) ? preferredMenu.join(', ') : "",
+      disliked_menu: Array.isArray(dislikedMenu) ? dislikedMenu.join(', ') : ""
     };
 
-    //  LocalStorage에 저장 (MenuRecommendPage에서 사용 가능하도록)
-    const userProfile = {
-      username,
-      allergies: allergy,                   // 리스트 형태로 저장
-      diseases: disease                     // 리스트 형태로 저장
-    };
-    localStorage.setItem("userProfile", JSON.stringify(userProfile));
+    console.log("서버에 보낼 데이터:", saveData);
 
-    // 서버 저장
-    axios.post("http://localhost:8000/mypage/update", saveData)
+    axios.post(`${API_BASE_URL}/mypage/update`, saveData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
       .then(() => {
         alert("저장되었습니다!");
         setTimeout(() => {
@@ -100,8 +106,8 @@ function Mypage() {
         }, 500);
       })
       .catch(err => {
-        console.error("저장 오류:", err);
-        alert("저장 중 오류 발생! 세부 내용은 콘솔을 확인해주세요.");
+        console.error("저장 오류 상세:", err.response?.data.detail || err);
+        alert("저장 중 오류 발생! 콘솔을 확인해주세요.");
       });
   };
 
@@ -170,7 +176,6 @@ function Mypage() {
         <button className="save-button" onClick={handleSave}>저장</button>
       </div>
 
-      {/* 모달 */}
       <Modal
         isOpen={modalInfo.isOpen}
         title={modalInfo.title}

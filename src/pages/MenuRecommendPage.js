@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MenuRecommendPage.css';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../api/api'; 
 
-const API_BASE_URL = "http://localhost:8000/api";
 
 function MenuRecommendPage() {
   const [showFilters, setShowFilters] = useState(true);
@@ -139,7 +139,9 @@ function MenuRecommendPage() {
         <button className="nav-tab" onClick={() => navigate("/chatbot")}>
           <img src="/movetomypage.png" alt="챗봇" className="tab-icon" />
         </button>
-        <button className="nav-tab" onClick={() => navigate("/mypage")}>👩</button>
+        <button className="nav-tab" onClick={() => navigate("/mypage")}>
+          <img src="/mypage.png" alt="마이페이지" className="tab-icon" />
+        </button>
       </div>
     </div>
   );

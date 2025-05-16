@@ -1,0 +1,81 @@
+/* frontend/src/pages/TeamPickFriendPage.css */
+
+.friend-select-container {
+  background-color: #fffbe9;
+  height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.search-bar {
+  width: 80%;
+  padding: 8px 12px;
+  border: 2px solid #f4c7d4;
+  border-radius: 20px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  margin: 10px auto;
+  padding: 10px 16px;
+  width: 80%;
+  border-radius: 24px;
+  border: 2px solid #f4c7d4;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  position: relative;
+}
+
+.user-item.selected {
+  background-color: #f4aab9;
+  border-color: #d99aaa;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-name {
+  flex: 1;
+  margin-left: 12px;
+  font-weight: bold;
+  color: #a66a3d;
+  text-align: left;
+}
+
+.select-circle {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #d99aaa;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.user-item.selected .select-circle {
+  background-color: #a66a3d;
+}
+
+.create-group-btn {
+  margin-top: 30px;
+  padding: 12px 28px;
+  background-color: #f4aab9;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+}

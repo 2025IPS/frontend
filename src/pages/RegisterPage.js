@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../api/api';
 
 function RegisterPage() {
   const navigate = useNavigate();
 
-  // 사용자 입력 상태 관리
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -16,10 +16,8 @@ function RegisterPage() {
     email: ''
   });
 
-  // 오류 메시지 상태
   const [errors, setErrors] = useState({});
 
-  // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,26 +26,21 @@ function RegisterPage() {
     });
   };
 
-  // 폼 제출 핸들러
   const handleSubmit = async () => {
     const newErrors = {};
-
-    // 기본 유효성 검사
     if (!formData.username) newErrors.username = '아이디를 입력해주세요';
     if (!formData.password) newErrors.password = '비밀번호를 입력해주세요';
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = '비밀번호가 일치하지 않습니다';
     if (!formData.name) newErrors.name = '이름을 입력해주세요';
 
-    // 오류가 있으면 상태 업데이트 후 종료
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     try {
-      // 서버에 회원가입 요청
-      const response = await axios.post('http://localhost:8000/register', {
+      await axios.post(`${API_BASE_URL}/register`, {
         username: formData.username,
         password: formData.password,
         name: formData.name,
@@ -55,15 +48,18 @@ function RegisterPage() {
         email: formData.email
       });
 
-      // 성공 시 사용자명을 로컬 스토리지에 저장
-      localStorage.setItem('username', formData.username);
+      await axios.post(`${API_BASE_URL}/mypage/update`, {
+        username: formData.username,
+        allergies: "",
+        diseases: "",
+        preferred_menu: "",
+        disliked_menu: ""
+      });
 
-      // 알러지 입력 페이지로 이동
+      localStorage.setItem('username', formData.username);
       navigate('/allergy');
     } catch (error) {
       console.error('회원가입 오류:', error);
-
-      // 서버 응답 오류 처리
       if (error.response && error.response.data) {
         if (
           error.response.data.detail === 'Username already exists' ||
@@ -150,20 +146,8 @@ function RegisterPage() {
       />
 
       <div className="button-group">
-        <button
-          className="back-button"
-          type="button"
-          onClick={() => navigate("/")}
-        >
-          뒤로가기
-        </button>
-        <button
-          className="next-button"
-          type="button"
-          onClick={handleSubmit}
-        >
-          다음
-        </button>
+        <button className="back-button" type="button" onClick={() => navigate("/")}>뒤로가기</button>
+        <button className="next-button" type="button" onClick={handleSubmit}>다음</button>
       </div>
     </div>
   );

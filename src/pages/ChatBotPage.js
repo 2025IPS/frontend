@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ChatBotPage.css";
+import { API_BASE_URL } from '../api/api';
 
 function ChatBotPage() {
   const [messages, setMessages] = useState([
@@ -23,7 +24,7 @@ function ChatBotPage() {
     setIsLoading(true);
 
     const eventSource = new EventSource(
-      `http://localhost:8000/api/llm-recommend-stream?user_profile=${encodeURIComponent(userProfile)}&weather=${encodeURIComponent(weather)}&situation=${encodeURIComponent(input)}`
+       `${API_BASE_URL}/api/llm-recommend-stream?user_profile=${encodeURIComponent(userProfile)}&weather=${encodeURIComponent(weather)}&situation=${encodeURIComponent(input)}`
     );
 
     let botResponse = "";
@@ -117,21 +118,23 @@ function ChatBotPage() {
             placeholder="눌러서 쫩쫩이에게 메뉴 추천받기"
             className="chat-input"
           />
-          <button onClick={sendMessage} className="send-button">➤</button>
+          <button onClick={sendMessage} className="send-button">
+            <img src="/send.png" alt="보내기" className="send-icon" />
+          </button>
         </div>
       </div>
 
-      <nav className="bottom-nav">
-        <button className="nav-button" onClick={() => navigate("/home")}>
-          <img src="/home.png" alt="홈" className="nav-icon" />
+      <div className="navigation-tabs">
+        <button className="nav-tab" onClick={() => navigate("/home")}>
+          <img src="/home.png" alt="홈" className="tab-icon" />
         </button>
-        <button className="nav-button" onClick={() => navigate("/menu-result")}>
-          <span className="bookmark-icon">📁</span>
+        <button className="nav-tab" onClick={() => navigate("/chatbot")}>
+          <img src="/movetomypage.png" alt="챗봇" className="tab-icon" />
         </button>
-        <button className="nav-button" onClick={() => navigate("/mypage")}>
-          <img src="/movetomypage.png" alt="마이페이지" className="nav-icon" />
+        <button className="nav-tab" onClick={() => navigate("/mypage")}>
+          <img src="/mypage.png" alt="마이페이지" className="tab-icon" />
         </button>
-      </nav>
+      </div>
     </div>
   );
 }

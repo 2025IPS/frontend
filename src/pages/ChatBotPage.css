@@ -154,15 +154,17 @@ body {
   border: 2px solid #F2B9C2;
   background-color: white;
   border-radius: 25px;
-  padding: 5px 20px;
-  margin-top: 12px;
+  padding: 5px 12px;         /* ← padding 줄임 */
+  margin: 12px auto 0 auto;  /* ← 가운데 정렬 */
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
-  font-family: 'Hakgyoansim-Bold'; /* 폰트 적용 */
+  font-family: 'Hakgyoansim-Bold';
 }
 
 .chat-input {
   flex: 1;
+  min-width: 0; 
   border: none;
   outline: none;
   background: transparent;
@@ -216,4 +218,52 @@ body {
 
 .bookmark-icon {
   font-size: 24px;
+}
+
+.send-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* 새로운 네비게이션 탭 스타일 */
+.navigation-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 100;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon {
+  width: 28px;
+  height: 28px;
 }

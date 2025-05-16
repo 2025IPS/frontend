@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import axios from 'axios';
+import { API_BASE_URL } from '../api/api';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function HomePage() {
   useEffect(() => {
     if (!username) return;
 
-    axios.get(`http://localhost:8000/user/${username}`)
+    axios.get(`${API_BASE_URL}/user/${username}`)
       .then(res => {
         setNickname(res.data.name || username);
       })

@@ -3,7 +3,7 @@ import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE_URL = "http://192.168.219.102:8000";  // ← 노트북의 내부 IP로 수정
+const API_BASE_URL = "http:";  // ← 노트북의 내부 IP로 수정
 
 function LoginPage() {
   const navigate = useNavigate();

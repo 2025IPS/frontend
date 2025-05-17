@@ -15,8 +15,9 @@
   }
   
   .quickpick-title {
+    font-family: 'HakgyoansimBold';
     font-size: 32px;
-    color: #d99aaa;
+    color: #C79665;
     margin-bottom: 10px;
     font-weight: bold;
   }

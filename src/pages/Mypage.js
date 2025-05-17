@@ -29,8 +29,6 @@ function Mypage() {
 
     axios.get(`${API_BASE_URL}/user/${username}`)
       .then(res => {
-        console.log("서버로부터 받은 유저 데이터:", res.data);
-
         const toArray = (value) =>
           typeof value === 'string'
             ? value.split(',').map(v => v.trim()).filter(Boolean)
@@ -40,7 +38,7 @@ function Mypage() {
 
         setAllergy(toArray(res.data.allergies));
         setDisease(toArray(res.data.diseases));
-        setPreferredMenu(toArray(res.data.preferred_menu));   // 필드명 정확히 맞춤
+        setPreferredMenu(toArray(res.data.preferred_menu));
         setDislikedMenu(toArray(res.data.disliked_menu));
       })
       .catch(err => {
@@ -92,8 +90,6 @@ function Mypage() {
       disliked_menu: Array.isArray(dislikedMenu) ? dislikedMenu.join(', ') : ""
     };
 
-    console.log("서버에 보낼 데이터:", saveData);
-
     axios.post(`${API_BASE_URL}/mypage/update`, saveData, {
       headers: {
         'Content-Type': 'application/json'
@@ -111,67 +107,34 @@ function Mypage() {
       });
   };
 
+  const renderItem = (title, list, setList, options) => (
+    <div className="mypage-item">
+      <div className="mypage-box">
+        <strong className="mypage-label">{title}</strong>
+        <div className="mypage-tags">
+          {list.map(item => (
+            <span className="tag" key={item}>
+              {item}
+              <button className="remove-button" onClick={() => removeItem(list, setList, item)}>
+                <img src={`/delete.png`} alt="삭제" className="delete-icon" />
+              </button>
+            </span>
+          ))}
+          <button className="add-button" onClick={() => openModal(`${title} 추가`, options, list, setList)}>＋</button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="mypage-container">
       <h1 className="mypage-title">마이페이지</h1>
 
-      {/* 지병 */}
-      <div className="mypage-item">
-        <strong>지병</strong>
-        <div className="mypage-tags">
-          {disease.map(item => (
-            <span className="tag" key={item}>
-              {item}
-              <button className="remove-button" onClick={() => removeItem(disease, setDisease, item)}>×</button>
-            </span>
-          ))}
-          <button className="add-button" onClick={() => openModal("지병 추가", diseaseOptions, disease, setDisease)}>＋</button>
-        </div>
-      </div>
+      {renderItem("지병", disease, setDisease, diseaseOptions)}
+      {renderItem("알러지", allergy, setAllergy, allergyOptions)}
+      {renderItem("선호 메뉴", preferredMenu, setPreferredMenu, menuOptions)}
+      {renderItem("비선호 메뉴", dislikedMenu, setDislikedMenu, menuOptions)}
 
-      {/* 알러지 */}
-      <div className="mypage-item">
-        <strong>알러지</strong>
-        <div className="mypage-tags">
-          {allergy.map(item => (
-            <span className="tag" key={item}>
-              {item}
-              <button className="remove-button" onClick={() => removeItem(allergy, setAllergy, item)}>×</button>
-            </span>
-          ))}
-          <button className="add-button" onClick={() => openModal("알러지 추가", allergyOptions, allergy, setAllergy)}>＋</button>
-        </div>
-      </div>
-
-      {/* 선호 메뉴 */}
-      <div className="mypage-item">
-        <strong>선호 메뉴</strong>
-        <div className="mypage-tags">
-          {preferredMenu.map(item => (
-            <span className="tag" key={item}>
-              {item}
-              <button className="remove-button" onClick={() => removeItem(preferredMenu, setPreferredMenu, item)}>×</button>
-            </span>
-          ))}
-          <button className="add-button" onClick={() => openModal("선호 메뉴 추가", menuOptions, preferredMenu, setPreferredMenu)}>＋</button>
-        </div>
-      </div>
-
-      {/* 비선호 메뉴 */}
-      <div className="mypage-item">
-        <strong>비선호 메뉴</strong>
-        <div className="mypage-tags">
-          {dislikedMenu.map(item => (
-            <span className="tag" key={item}>
-              {item}
-              <button className="remove-button" onClick={() => removeItem(dislikedMenu, setDislikedMenu, item)}>×</button>
-            </span>
-          ))}
-          <button className="add-button" onClick={() => openModal("비선호 메뉴 추가", menuOptions, dislikedMenu, setDislikedMenu)}>＋</button>
-        </div>
-      </div>
-
-      {/* 저장 버튼 */}
       <div className="button-container">
         <button className="save-button" onClick={handleSave}>저장</button>
       </div>

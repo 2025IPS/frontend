@@ -71,6 +71,7 @@ function MenuRecommendPage() {
               <option value="청파동">청파동</option>
               <option value="효창동">효창동</option>
               <option value="남영동">남영동</option>
+              <option value="학식">학식</option>
             </select>
             <img src="/select.png" alt="선택" className="select-icon" />
           </div>

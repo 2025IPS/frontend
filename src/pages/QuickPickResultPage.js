@@ -219,7 +219,11 @@ function QuickPickResultPage() {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">랜덤 메뉴 추천 <span>완료!</span></h1>
+      <h2 className="result-title">
+        <span className="brown">랜덤 메뉴 추천</span>
+        <span className="pink"> 완료!</span>
+      </h2>
+
       <div className="result-circle">
         <div className="circle-fill" style={{ height: `${percentage}%` }}></div>
         <div className="circle-inner">
@@ -229,7 +233,7 @@ function QuickPickResultPage() {
         </div>
       </div>
       <p className="description">
-        <span className="nickname">{nickname}</span>님의 선호가 <span className="percentage">{percentage}%</span> 반영된 오늘의 랜덤 메뉴에요!
+        <span className="nickname">{nickname}</span>님의 선호가<br/> <span className="percentage">{percentage}%</span> 반영된 오늘의 랜덤 메뉴에요!
         <span className="detail-link" onClick={viewDetail}>추천 상세 보기 &gt;</span>
       </p>
       <div className="result-buttons">

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-const API_BASE_URL = "http://192.168.219.102:8000";  // ← 노트북의 내부 IP로 수정
+import { API_BASE_URL } from '../api/api';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -48,12 +47,16 @@ function LoginPage() {
 
   return (
     <div className="login-container">
-      <h1 className="login-title">로그인</h1>
+      <h1 className="login-title">
+        <span className="pink">로그인</span>
+        <span className="brown">을 해주세요</span>
+      </h1>
+
 
       <input
         type="text"
         name="username"
-        placeholder="아이디"
+        placeholder="ID"
         className="login-input"
         value={formData.username}
         onChange={handleChange}
@@ -71,8 +74,8 @@ function LoginPage() {
       {error && <p className="error-message">{error}</p>}
 
       <div className="login-button-group">
-        <button className="login-button" onClick={handleSubmit}>로그인</button>
         <button className="register-button" onClick={() => navigate('/register')}>회원가입</button>
+        <button className="login-button" onClick={handleSubmit}>로그인</button>
       </div>
     </div>
   );

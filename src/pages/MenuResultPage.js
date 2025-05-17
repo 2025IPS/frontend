@@ -9,9 +9,13 @@ function MenuResultPage() {
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [imageSrc, setImageSrc] = useState(""); // 이미지 경로 상태 추가
+  const [imageSrc, setImageSrc] = useState('');
+  const [imgTryIndex, setImgTryIndex] = useState(0);
 
   const savedInfo = JSON.parse(localStorage.getItem("recommendInfo"));
+
+  // ✅ 띄어쓰기 → 언더스코어 처리 함수
+  const toFileName = (text) => text.trim().replace(/\s+/g, "_");
 
   useEffect(() => {
     if (!savedInfo) {
@@ -24,14 +28,12 @@ function MenuResultPage() {
     setError(null);
 
     fetch(`${API_BASE_URL}/menu-recommend`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(savedInfo)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(savedInfo),
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("서버 오류");
-        }
+        if (!res.ok) throw new Error("서버 오류");
         return res.json();
       })
       .then((data) => {
@@ -46,37 +48,28 @@ function MenuResultPage() {
       });
   }, []);
 
-  // 이미지 파일 경로 설정 (jpg, jpeg, png 지원)
   useEffect(() => {
     if (!recommendation) return;
 
-    const baseFileName = `${recommendation.place_name}_${recommendation.menu_name}`
-      .replace(/\s+/g, "_")
-      .replace(/[()]/g, "")
-      .replace(/[^a-zA-Z0-9가-힣_]/g, "");
-
-    const extensions = [".jpg", ".jpeg", ".png"];
-    let found = false;
-
-    (async () => {
-      for (const ext of extensions) {
-        const url = `/menu-images/${baseFileName}${ext}`;
-        try {
-          const res = await fetch(url, { method: "HEAD" });
-          if (res.ok) {
-            setImageSrc(url);
-            found = true;
-            break;
-          }
-        } catch (e) {
-          // 무시하고 다음 확장자 시도
-        }
-      }
-      if (!found) {
-        setImageSrc("/menu-images/기타.jpg");
-      }
-    })();
+    const baseFileName = `${toFileName(recommendation.place_name)}_${toFileName(recommendation.menu_name)}`;
+    setImageSrc(`/menu-images/${baseFileName}.jpg`);
+    setImgTryIndex(0);
   }, [recommendation]);
+
+  const handleImageError = () => {
+    if (!recommendation) return;
+
+    const baseFileName = `${toFileName(recommendation.place_name)}_${toFileName(recommendation.menu_name)}`;
+    const extensions = [".jpeg", ".png"];
+    const nextIndex = imgTryIndex;
+
+    if (nextIndex < extensions.length) {
+      setImageSrc(`/menu-images/${baseFileName}${extensions[nextIndex]}`);
+      setImgTryIndex(nextIndex + 1);
+    } else {
+      setImageSrc("/menu-images/기타.jpg");
+    }
+  };
 
   const handleRetry = () => {
     window.location.reload();
@@ -91,7 +84,7 @@ function MenuResultPage() {
       body: JSON.stringify({
         place_name: recommendation.place_name,
         menu_name: recommendation.menu_name,
-        feedback: type
+        feedback: type,
       }),
     })
       .then((res) => {
@@ -136,6 +129,7 @@ function MenuResultPage() {
           src={imageSrc}
           alt={recommendation.menu_name}
           className="result-image"
+          onError={handleImageError}
         />
         <div className="result-restaurant-info">
           <h3>{recommendation.place_name}</h3>
@@ -147,7 +141,14 @@ function MenuResultPage() {
             <span className="tag">주소: {recommendation.address}</span>
           </div>
           <div className="tags">
-            <a href={recommendation.url} target="_blank" rel="noreferrer" className="tag">네이버에서 보기</a>
+            <a
+              href={recommendation.url}
+              target="_blank"
+              rel="noreferrer"
+              className="tag"
+            >
+              네이버에서 보기
+            </a>
           </div>
         </div>
       </div>
@@ -161,10 +162,12 @@ function MenuResultPage() {
         </div>
       </div>
 
-      <button className="other-button" onClick={() => navigate(-1)}>다른 메뉴 추천</button>
+      <button className="other-button" onClick={() => navigate(-1)}>
+        다른 메뉴 추천
+      </button>
 
       <div className="navigation-tabs">
-          <button className="nav-tab" onClick={() => navigate("/home")}>
+        <button className="nav-tab" onClick={() => navigate("/home")}>
           <img src="/home.png" alt="홈" className="tab-icon" />
         </button>
         <button className="nav-tab" onClick={() => navigate("/chatbot")}>

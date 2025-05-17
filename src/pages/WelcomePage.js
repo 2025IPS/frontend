@@ -8,7 +8,12 @@ function WelcomePage() {
   return (
     <div className="container">
       <img src="/chef.png" alt="오늘의 먹방은 캐릭터" className="character" />
-      <h1 className="title">오늘의 <span className="highlight">먹방은</span></h1>
+      <h1 class="title">
+        <span class="pink">오늘의</span>
+        <span class="brown"> 먹방</span>
+        <span class="pink">은</span>
+      </h1>
+
       <button className="start-button" onClick={() => navigate("/register")}>
         시작하기
       </button>

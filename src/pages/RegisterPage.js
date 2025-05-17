@@ -77,7 +77,10 @@ function RegisterPage() {
 
   return (
     <div className="register-container">
-      <h1 className="register-title">회원정보를 입력해주세요</h1>
+      <h1 className="register-title">
+        <span className="pink">회원정보</span>
+        <span className="brown">를 입력해주세요</span>
+      </h1>
 
       <div className="input-group">
         <input 
@@ -146,8 +149,8 @@ function RegisterPage() {
       />
 
       <div className="button-group">
-        <button className="back-button" type="button" onClick={() => navigate("/")}>뒤로가기</button>
-        <button className="next-button" type="button" onClick={handleSubmit}>다음</button>
+        <button className="back-button" onClick={() => navigate('/')}>뒤로가기</button>
+        <button className="next-button" onClick={handleSubmit}>다음</button>
       </div>
     </div>
   );

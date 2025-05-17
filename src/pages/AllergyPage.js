@@ -41,7 +41,6 @@ function AllergyPage() {
     try {
       const prev = await axios.get(`${API_BASE_URL}/user/${username}`);
 
-      // ✅ 빈 값 제거 후 문자열로 변환
       const cleanedAllergies = selectedAllergies.filter(Boolean).join(', ');
       const cleanedDiseases = Array.isArray(prev.data.diseases)
         ? prev.data.diseases.filter(Boolean).join(', ')
@@ -66,7 +65,16 @@ function AllergyPage() {
 
   return (
     <div className="allergy-container">
-      <h1 className="allergy-title">알레르기 정보 입력</h1>
+      <h1 className="allergy-title">
+        <span className="pink">알레르기 </span>
+        <span className="brown">정보 입력</span>
+      </h1>
+
+      <p className="allergy-description">
+        해당되는 재료를 선택해주시면<br />
+        정확한 메뉴 추천이 가능해요!
+      </p>
+
       <div className="allergy-buttons">
         {allergies.map(item => (
           <button
@@ -78,7 +86,10 @@ function AllergyPage() {
           </button>
         ))}
       </div>
-      <button className="common-button" onClick={handleNext}>다음</button>
+
+      <div className="next-button-container">
+        <button className="next-button" onClick={handleNext}>다음</button>
+      </div>
     </div>
   );
 }

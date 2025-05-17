@@ -43,7 +43,6 @@ function DiseasePage() {
     try {
       const prev = await axios.get(`${API_BASE_URL}/user/${username}`);
 
-      // ✅ 문자열로 변환
       const cleanedDiseases = selectedDiseases.filter(Boolean).join(', ');
       const cleanedAllergies = Array.isArray(prev.data.allergies)
         ? prev.data.allergies.filter(Boolean).join(', ')
@@ -68,7 +67,15 @@ function DiseasePage() {
 
   return (
     <div className="disease-container">
-      <h1 className="disease-title">지병 정보 입력</h1>
+      <h1 className="disease-title">
+        <span className="pink">지병</span>
+        <span className="brown"> 정보 입력</span>
+      </h1>
+
+      <p className="disease-description">
+        앓고 있는 지병이 있으신가요?
+      </p>
+
       <div className="disease-buttons">
         {diseases.map(item => (
           <button
@@ -80,7 +87,10 @@ function DiseasePage() {
           </button>
         ))}
       </div>
-      <button className="common-button" onClick={handleNext}>다음</button>
+
+      <div className="next-button-container">
+        <button className="next-button" onClick={handleNext}>다음</button>
+      </div>
     </div>
   );
 }

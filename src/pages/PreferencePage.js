@@ -53,7 +53,6 @@ function PreferencePage() {
         ? prev.data.diseases
         : "";
 
-      // ✅ 메뉴 문자열로 저장
       await axios.post(`${API_BASE_URL}/mypage/update`, {
         username,
         allergies,
@@ -64,7 +63,6 @@ function PreferencePage() {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      // ✅ 다시 불러오기 → Context에 반영
       const updated = await axios.get(`${API_BASE_URL}/user/${username}`);
 
       const toArray = (value) =>
@@ -86,28 +84,37 @@ function PreferencePage() {
 
   return (
     <div className="preference-container">
-      <h1 className="preference-title">음식 <span>취향</span>을 알려주세요!</h1>
+      <h1 className="preference-title">
+        <span className="pink">음식 </span>
+        <span className="brown">취향을 알려주세요!</span>
+      </h1>
+
       <div className="preference-list">
         {items.map(item => (
           <div className="preference-item" key={item.name}>
             <img src={item.image} alt={item.name} className="preference-image" />
-            <div className="preference-name">{item.name}</div>
-            <div className="preference-options">
-              {["좋아요", "보통", "싫어요"].map(option => (
-                <label
-                  key={option}
-                  className={`preference-option ${preferences[item.name] === option ? 'selected' : ''}`}
-                  onClick={() => handlePreferenceChange(item.name, option)}
-                >
-                  <input type="radio" name={item.name} value={option} />
-                  {option}
-                </label>
-              ))}
+            <div className="preference-content">
+              <div className="preference-name">{item.name}</div>
+              <div className="preference-options">
+                {["좋아요", "보통", "싫어요"].map(option => (
+                  <label
+                    key={option}
+                    className={`preference-option ${preferences[item.name] === option ? 'selected' : ''}`}
+                    onClick={() => handlePreferenceChange(item.name, option)}
+                  >
+                    <input type="radio" name={item.name} value={option} />
+                    {option}
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
         ))}
       </div>
-      <button className="save-button" onClick={handleSave}>저장</button>
+
+      <div className="next-button-container">
+        <button className="next-button" onClick={handleSave}>저장</button>
+      </div>
     </div>
   );
 }

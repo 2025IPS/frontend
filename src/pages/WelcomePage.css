@@ -38,7 +38,15 @@ body {
 .title {
     font-size: 48px;
     margin: 20px 0;
-    color: #e89aa8;
+    font-family: 'Hakgyoansim-Bold';
+}
+
+.title .pink {
+    color: #F2B9C2;
+}
+
+.title .brown {
+    color: #C79665;
 }
 
 .title .highlight {
@@ -47,15 +55,15 @@ body {
 
 .start-button {
     font-family: 'GmarketSans-Bold';
-    font-size: 20px;
-    padding: 15px 50px;
-    background-color: #f5a9b8;  /* 연핑크 */
+    font-size: 25px;
+    padding: 15px 25px;
+    background-color: #F2B9C2;  /* 연핑크 */
     color: white;
     border: none;
     border-radius: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* 살짝 그림자 */
     cursor: pointer;
-    margin-top: 40px;
+    margin-top: 80px;
     transition: transform 0.2s ease, background 0.2s ease;
 }
 

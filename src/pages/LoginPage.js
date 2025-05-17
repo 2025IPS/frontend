@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+<<<<<<< HEAD
 import { API_BASE_URL } from '../api/api';
+=======
+
+const API_BASE_URL = "http:";  // ← 노트북의 내부 IP로 수정
+>>>>>>> 2f4eb68e25db192a545228c4e2a1e8e2e3b45b26
 
 function LoginPage() {
   const navigate = useNavigate();

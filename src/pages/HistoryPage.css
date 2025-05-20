@@ -1,0 +1,112 @@
+@font-face {
+  font-family: 'Hakgyoansim-Bold';
+  src: url('../assets/fonts/Hakgyoansim-Bold.ttf') format('truetype');
+}
+
+.history-page {
+  background-color: #FFFFF0;
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Hakgyoansim-Bold';
+}
+
+.history-title {
+  text-align: center;
+  font-size: 28px;
+  color: #C79665;
+  margin-bottom: 30px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.history-card {
+  background-color: white;
+  border: 2px solid #F2B9C2;
+  border-radius: 12px;
+  width: 320px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.place-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.place-name {
+  color: #C79665;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.menu-name {
+  font-size: 14px;
+  color: #A98E7A;
+}
+
+/* 리뷰 버튼 - 기본: 흰 배경 + 분홍 글씨 */
+.review-button {
+  background-color: white;
+  color: #F2B9C2;
+  border: 2px solid #F2B9C2;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'Hakgyoansim-Bold';
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 클릭 시 색 반전 */
+.review-button.clicked {
+  background-color: #F2B9C2;
+  color: white;
+}
+
+/* 돌아가기 버튼 wrapper */
+.back-button-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 40px;
+}
+
+/* 돌아가기 버튼 */
+.back-button {
+  font-size: 16px;
+  padding: 12px 28px;
+  background-color: #F2B9C2;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Hakgyoansim-Bold';
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.review-done-button {
+  background-color: #F2B9C2;
+  color: white;
+  font-family: 'Hakgyoansim-Bold';
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.review-done-button:hover {
+  background-color: #e9a9b2; 
+}
+
+

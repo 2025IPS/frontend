@@ -223,3 +223,11 @@
     border-radius: 50%;
   }
   
+  .info-text {
+  margin-top: 230px;       /* 👈 장소 선택과의 간격 */
+  margin-bottom: -10px;   /* 👈 옵션들과 살짝 간격 조정 */
+  font-size: 16px;
+  color: #C79665;
+  text-align: center;
+  font-family: 'Hakgyoansim-Regular';
+}

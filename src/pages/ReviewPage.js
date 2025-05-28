@@ -179,7 +179,7 @@ function ReviewPage() {
 
         <textarea
           className="comment-box"
-          placeholder="리뷰 내용을 입력하세요"
+          placeholder="리뷰 내용을 입력하세요. 한 번 작성한 리뷰는 수정이 불가합니다."
           value={comment}
           onChange={(e) => !isAlreadyReviewed && setComment(e.target.value)}
           disabled={isAlreadyReviewed}

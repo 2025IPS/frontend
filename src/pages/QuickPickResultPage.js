@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../api/api';
 
 const INGREDIENT_CATEGORIES = {
   "달걀": ["계란", "달걀", "에그", "지단", "오믈렛", "스크램블", "에그마요", "계란찜", "계란말이", "계란후라이", "계란볶음", "달걀찜", "타마고", "계란탕", "계란국", "에그드랍", "깜파뉴", "마요네즈", "계란구이", "전", "부침", "에그베네딕트", "휘낭시에", "쿠키", "돈가스", "김밥"],
-  "갑각류": ["새우", "게", "랍스터", "크랩", "꽃게", "대게", "킹크랩", "소프트크랩", "새우살", "홍게", "게살", "게장", "간장게장", "양념게장", "가재", "소프틱크랩", "민물새우", "바닷가재", "새우까스", "새우완자", "새우전", "모듬해물", "칠리새우", "마늘새우", "버터새우", "해물요리", "감바스", "쉬림프"],
+  "갑각류": ["새우", "게", "랍스터", "크랩", "꽃게", "대게", "킹크랩", "소프트크랩", "새우살", "홍게", "게살", "게장", "간장게장", "양념게장", "가재", "소프틱크랩", "민물새우", "바닷가재", "새우까스", "새우완자", "새우전", "모듬해물", "칠리새우", "마늘새우", "버터새우", "해물요리", "감바스", "쉬림프","해물찜"],
   "밀": ["빵", "파스타", "면", "라면", "우동", "만두", "피자", "떡국", "튀김", "국수", "짜장면", "부대찌개", "돈가스", "버거", "케이크"],
   "땅콩/대두": ["두부", "된장", "콩국수", "콩나물", "간장", "고추장", "쌈장", "유부", "두유"],
   "고기": ["소고기", "돼지고기", "닭고기", "삼겹살", "소시지", "스테이크", "치킨", "제육", "햄", "곱창", "내장"],
@@ -20,10 +20,10 @@ const INGREDIENT_CATEGORIES = {
 };
 
 const DISEASE_RULES = {
-  "고혈압": ["간장", "된장", "햄", "소시지", "소금", "고기", "곱창", "내장", "삼겹살"],
+  "고혈압": ["간장", "된장", "햄", "소시지", "소금", "고기", "곱창", "내장", "삼겹살", "버섯덮밥", "무뼈닭발", "양꼬치", "버거","떡볶이"],
   "저혈압": ["커피", "콜라", "에너지음료"],
-  "당뇨": ["설탕", "시럽", "크림", "케이크", "빵"],
-  "신장질환": ["된장", "소금", "소시지", "햄", "고기", "치즈"]
+  "당뇨": ["설탕", "시럽", "크림", "케이크", "빵","크림파스타", "버거"],
+  "신장질환": ["된장", "소금", "소시지", "햄", "고기", "치즈","삼겹살", "무뼈닭발", "양꼬치", "크림파스타", "버거"]
 };
 
 function normalize(str) {
@@ -127,17 +127,17 @@ const menus = [
   { name: "찜닭", image: "/jjimdak.png", ingredients: ["닭고기", "간장", "고기"] },
   { name: "육회비빔밥", image: "/yukhoe_bibimbap.png", ingredients: ["육회", "밥", "고기", "달걀"] },
   { name: "삼계탕", image: "/samgyetang.png", ingredients: ["닭고기", "인삼", "대추"] }, 
-  { name: "쌈밥", image: "/ssambap.png", ingredients: ["상추", "쌈장", "밥", "고기"] }, // 고혈압
-  { name: "샤브샤브", image: "/shabu.png", ingredients: ["채소", "소고기", "버섯"] }, // 고혈압
-  { name: "유부초밥", image: "/yubuchobap.png", ingredients: ["유부", "밥", "식초"] }, // 신장질환
-  { name: "감자전", image: "/gamjajeon.png", ingredients: ["감자", "소금"] }, // 신장질환
-  { name: "콩국수", image: "/kongguksu.png", ingredients: ["콩", "면", "밀"] }, // 당뇨
-  { name: "연어 샐러드", image: "/salmon_salad.png", ingredients: ["연어", "채소", "드레싱"] }, // 당뇨
-  { name: "닭가슴살 샐러드", image: "/chicken_salad.png", ingredients: ["닭가슴살", "채소", "드레싱"] }, // 저혈압 & 신장
-  { name: "버섯들깨탕", image: "/deulkkaetang.png", ingredients: ["버섯", "들깨", "채소"] }, // 고혈압 & 신장
-  { name: "호박죽", image: "/hobakjuk.png", ingredients: ["단호박", "쌀", "우유"] }, // 저혈압 & 당뇨
-  { name: "두부 샐러드", image: "/tofu_salad.png", ingredients: ["두부", "채소", "드레싱"] }, // 고혈압 & 당뇨
-  { name: "연어 구이", image: "/grilled_salmon.png", ingredients: ["연어", "소금", "올리브오일"] } // 고혈압 & 당뇨
+  { name: "쌈밥", image: "/ssambap.png", ingredients: ["상추", "쌈장", "밥", "고기"] }, 
+  { name: "샤브샤브", image: "/shabu.png", ingredients: ["채소", "소고기", "버섯"] }, 
+  { name: "유부초밥", image: "/yubuchobap.png", ingredients: ["유부", "밥", "식초"] }, 
+  { name: "감자전", image: "/gamjajeon.png", ingredients: ["감자", "소금"] }, 
+  { name: "콩국수", image: "/kongguksu.png", ingredients: ["콩", "면", "밀"] }, 
+  { name: "연어 샐러드", image: "/salmon_salad.png", ingredients: ["연어", "채소", "드레싱"] }, 
+  { name: "닭가슴살 샐러드", image: "/chicken_salad.png", ingredients: ["닭가슴살", "채소", "드레싱"] }, 
+  { name: "버섯들깨탕", image: "/deulkkaetang.png", ingredients: ["버섯", "들깨", "채소"] }, 
+  { name: "호박죽", image: "/hobakjuk.png", ingredients: ["단호박", "쌀", "우유"] }, 
+  { name: "두부 샐러드", image: "/tofu_salad.png", ingredients: ["두부", "채소", "드레싱"] }, 
+  { name: "연어 구이", image: "/grilled_salmon.png", ingredients: ["연어", "소금", "올리브오일"] } 
 ];
 
 function QuickPickResultPage() {

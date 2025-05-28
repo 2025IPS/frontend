@@ -43,3 +43,22 @@
   background-color: #e6aab5;
   transform: translateY(-2px);
 }
+
+.reason-box ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.reason-box li {
+  margin-bottom: 4px;
+}
+
+.modal-content ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.modal-content li {
+  list-style-type: none;
+}

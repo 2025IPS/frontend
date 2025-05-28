@@ -24,10 +24,12 @@
 }
 
 .result-menu {
-  font-family: 'Hakgyoansim-Bold';
-  font-size: 50px !important;
+  font-size: 50px;
+  font-family: 'Hakgyoansim-Bold'; /* 원하는 글꼴로 변경 */
   color: #593a1e;
-  margin-bottom: 24px;
+  text-align: center;
+  white-space: pre-line; /* \n을 줄바꿈 처리 */
+  line-height: 1.4;
 }
 
 .result-image-box {

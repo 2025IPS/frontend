@@ -36,14 +36,17 @@ const menus = [
 ];
 
 const INGREDIENT_CATEGORIES = {
-  "고기": ["소고기", "돼지고기", "닭고기", "삼겹살", "양고기", "고기", "육회"],
-  "버섯": ["버섯", "양송이버섯", "표고버섯"],
-  "우유": ["우유", "치즈", "크림", "라떼"],
-  "고수": ["고수"],
-  "밀": ["면", "밀", "빵", "튀김옷"],
-  "갑각류": ["새우", "꽃게", "문어"],
-  "달걀": ["달걀", "계란"],
+  "고기": ["소고기", "돼지고기", "닭고기", "삼겹살", "양고기", "고기", "육회", "닭발", "닭가슴살"],
+  "해산물": ["새우", "꽃게", "문어", "연어", "해산물"],
+  "채소": ["채소", "상추", "숙주", "고수", "감자", "단호박", "인삼", "대추", "버섯", "양송이버섯", "표고버섯"],
+  "탄수화물": ["밥", "떡", "쌀", "면", "밀", "빵", "유부", "토스트", "감자"],
+  "유제품": ["우유", "치즈", "크림", "생크림", "라떼"],
+  "계란": ["달걀", "계란"],
+  "가공식품": ["두부", "유부", "소스", "드레싱", "쌈장", "춘장", "간장", "고추장", "식초", "들깨", "올리브오일"],
+  "조미료/소스": ["간장", "쌈장", "춘장", "고추장", "식초", "소금", "올리브오일"],
+  "기타": ["콩", "들깨", "식초", "드레싱", "유부", "쌈장"]
 };
+
 
 const DISEASE_RULES = {
   "고혈압": ["간장", "된장", "햄", "소시지", "소금", "고기"],
@@ -56,38 +59,51 @@ function normalize(str) {
   return str.trim().toLowerCase();
 }
 
+function safeArray(input) {
+  if (Array.isArray(input)) return input;
+  if (typeof input === 'string') return input.split(',').map(s => s.trim());
+  return [];
+}
+
 function categorizeIngredient(ingredient, preferences) {
   const normalized = normalize(ingredient);
-  const normalizedAllergies = (preferences.allergy || []).map(normalize);
-  const normalizedDiseases = (preferences.disease || []).map(normalize);
+  const normalizedAllergies = safeArray(preferences.allergy).map(normalize);
+  const normalizedDiseases = safeArray(preferences.disease).map(normalize);
+  const normalizedLikes = safeArray(preferences.likes).map(normalize);
+  const normalizedDislikes = safeArray(preferences.dislikes).map(normalize);
+
+  let matchedCategory = null;
 
   for (const category in INGREDIENT_CATEGORIES) {
     const words = INGREDIENT_CATEGORIES[category].map(normalize);
     if (words.includes(normalized)) {
-      const isAllergy = normalizedAllergies.includes(normalize(category));
-      const restrictedBy = normalizedDiseases.filter(disease =>
-        (DISEASE_RULES[disease] || []).map(normalize).includes(normalized)
-      );
-      return {
-        category,
-        like: preferences.likes?.includes(category),
-        dislike: preferences.dislikes?.includes(category),
-        allergy: isAllergy,
-        restrictedBy
-      };
+      matchedCategory = category;
+      break;
     }
   }
 
-  const fallbackRestrictions = normalizedDiseases.filter(disease =>
+  const isAllergy =
+    normalizedAllergies.includes(normalized) ||
+    (matchedCategory && normalizedAllergies.includes(normalize(matchedCategory)));
+
+  const restrictedBy = normalizedDiseases.filter(disease =>
     (DISEASE_RULES[disease] || []).map(normalize).includes(normalized)
   );
 
+  const isDislike =
+    normalizedDislikes.includes(normalized) ||
+    (matchedCategory && normalizedDislikes.includes(normalize(matchedCategory)));
+
+  const isLike =
+    normalizedLikes.includes(normalized) ||
+    (matchedCategory && normalizedLikes.includes(normalize(matchedCategory)));
+
   return {
-    category: null,
-    like: false,
-    dislike: false,
-    allergy: false,
-    restrictedBy: fallbackRestrictions
+    category: matchedCategory,
+    like: isLike,
+    dislike: isDislike,
+    allergy: isAllergy,
+    restrictedBy
   };
 }
 
@@ -115,44 +131,64 @@ function getReason(menu, preferences) {
   };
 }
 
+
 function isMenuDisqualified(menu, teamPreferences) {
-  let disqualifiedCount = 0;
   for (const prefs of teamPreferences) {
     for (const ingredient of menu.ingredients) {
       const result = categorizeIngredient(ingredient, prefs);
-      if (result.restrictedBy.length > 0 || result.allergy) {
-        disqualifiedCount++;
-        break;
+      if (
+        result.restrictedBy.length > 0 ||
+        result.allergy ||
+        result.dislike
+      ) {
+        return true; // 하나라도 해당되면 탈락
       }
     }
   }
-  return disqualifiedCount > teamPreferences.length / 2;
+  return false; // 모두 통과 시만 true
 }
+
 
 function calculateTeamPreference(menu, teamPreferences) {
   if (isMenuDisqualified(menu, teamPreferences)) return 0;
-
   let totalScore = 0;
   for (const prefs of teamPreferences) {
-    let score = 50;
-    let bonus = 0;
-    let penalty = 0;
-
+    let score = 50, bonus = 0, penalty = 0;
     for (const ingredient of menu.ingredients) {
       const result = categorizeIngredient(ingredient, prefs);
       if (result.like) bonus += 15;
       if (result.dislike) penalty += 10;
     }
-
     score += bonus - penalty;
     score = Math.max(30, Math.min(score, 90));
     totalScore += score;
   }
-
   const avgScore = totalScore / teamPreferences.length;
-  const finalScore = Math.max(0, Math.min(avgScore + (Math.floor(Math.random() * 7) - 3), 100));
+  return Math.round(Math.max(0, Math.min(avgScore + (Math.random() * 6 - 3), 100)));
+}
 
-  return Math.round(finalScore);
+function getQuickPickMenus(teamPreferences) {
+  const preferenceSets = teamPreferences.map(p => new Set([
+    ...safeArray(p.likedMenu),
+    ...safeArray(p.normalMenu)
+  ]));
+
+  const commonMenus = [...preferenceSets[0]].filter(menu =>
+    preferenceSets.every(set => set.has(menu))
+  );
+
+  const safeMenus = commonMenus.filter(name => {
+    const menu = menus.find(m => m.name === name);
+    if (!menu) return false;
+    return !teamPreferences.some(prefs =>
+      menu.ingredients.some(ing => {
+        const result = categorizeIngredient(ing, prefs);
+        return result.allergy || result.restrictedBy.length > 0 || result.dislike;
+      })
+    );
+  });
+
+  return menus.filter(m => safeMenus.includes(m.name));
 }
 
 function TeamPickResultPage() {
@@ -163,6 +199,7 @@ function TeamPickResultPage() {
   const [percentage, setPercentage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+  const [isQuickPick, setIsQuickPick] = useState(false);
   const navigate = useNavigate();
   const teamMembers = JSON.parse(localStorage.getItem("teamMembers")) || [];
 
@@ -183,29 +220,25 @@ function TeamPickResultPage() {
 
   useEffect(() => {
     if (teamPreferences.length === 0) return;
-
-    const scoredMenus = menus.map(menu => ({
-      ...menu,
-      score: calculateTeamPreference(menu, teamPreferences),
-      disqualified: isMenuDisqualified(menu, teamPreferences)
-    })).filter(menu => !menu.disqualified);
-
-    const sorted = scoredMenus.sort((a, b) => b.score - a.score);
-    const topMenus = sorted.slice(0, 3); // 상위 3개 후보 저장
-
-    setMenuCandidates(topMenus);
+    const candidates = (isQuickPick ? getQuickPickMenus(teamPreferences) : menus)
+      .map(menu => ({
+        ...menu,
+        score: calculateTeamPreference(menu, teamPreferences),
+        disqualified: isMenuDisqualified(menu, teamPreferences)
+      }))
+      .filter(menu => !menu.disqualified)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+    setMenuCandidates(candidates);
     setCurrentIndex(0);
-  }, [teamPreferences]);
+  }, [teamPreferences, isQuickPick]);
 
   useEffect(() => {
     if (menuCandidates.length === 0) return;
-
     const selected = menuCandidates[currentIndex];
     if (!selected) return;
-
     setBestMenu(selected);
     setPercentage(0);
-
     const interval = setInterval(() => {
       setPercentage(prev => {
         if (prev < selected.score) return prev + 1;
@@ -213,7 +246,6 @@ function TeamPickResultPage() {
         return selected.score;
       });
     }, 20);
-
     return () => clearInterval(interval);
   }, [menuCandidates, currentIndex]);
 

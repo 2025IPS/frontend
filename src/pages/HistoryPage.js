@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../api/api';
 
 function HistoryPage() {
   const [history, setHistory] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(10); // ✅ 처음에 10개 표시
+  const [visibleCount, setVisibleCount] = useState(10);
   const navigate = useNavigate();
   const userId = localStorage.getItem('user_id');
 
@@ -15,8 +15,6 @@ function HistoryPage() {
       axios.get(`${API_BASE_URL}/history/${userId}`)
         .then(res => {
           const allHistory = res.data;
-
-          // 최신순 정렬 → 싫어요 제외
           const sorted = allHistory
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
             .filter(item => item.feedback !== "bad");
@@ -47,14 +45,19 @@ function HistoryPage() {
 
   return (
     <div className="history-page">
-      <h1 className="history-title">히스토리</h1>
+      <h1 className="history-title">
+        <button className="history-back-button" onClick={() => navigate('/mypage')}>
+          &lt;
+        </button>
+        히스토리
+      </h1>
 
       <div className="history-list">
         {history.slice(0, visibleCount).map((item, index) => (
           <div key={index} className="history-card">
             <div className="place-info">
               <strong className="place-name">{item.place_name}</strong>
-              <span className="menu-name">{item.menu_name}</span>
+              <span className="menu-name"> {item.menu_name}</span>
             </div>
 
             <button
@@ -66,7 +69,6 @@ function HistoryPage() {
           </div>
         ))}
 
-        {/* ✅ 더보기 버튼 */}
         {visibleCount < history.length && (
           <div className="load-more-wrapper">
             <button className="load-more-button" onClick={handleLoadMore}>
@@ -74,12 +76,6 @@ function HistoryPage() {
             </button>
           </div>
         )}
-
-        <div className="back-button-wrapper">
-          <button className="back-button" onClick={() => navigate('/mypage')}>
-            ← 돌아가기
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MenuRecommendPage.css';
 import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../api/api'; 
+import { API_BASE_URL } from '../api/api';
+import { useUserData } from '../UserDataContext';
 
 function MenuRecommendPage() {
   const [showFilters, setShowFilters] = useState(true);
@@ -13,6 +14,12 @@ function MenuRecommendPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const {
+    allergy,
+    disease,
+    preferredMenu,
+    dislikedMenu
+  } = useUserData();
 
   useEffect(() => {
     const savedInfo = localStorage.getItem("recommendInfo");
@@ -28,10 +35,14 @@ function MenuRecommendPage() {
 
   const handleRecommend = async () => {
     setIsLoading(true);
+
     const userProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
-    const user_id = userProfile.user_id || 1; // 기본값으로 1 사용 (필요 시 수정)
-    const allergies = userProfile.allergies || [];
-    const diseases = userProfile.diseases || [];
+    const user_id = userProfile.user_id || 1;
+
+    const allergies = allergy || [];
+    const diseases = disease || [];
+    const liked_ingredients = preferredMenu || [];
+    const disliked_ingredients = dislikedMenu || [];
 
     const recommendInfo = {
       user_id,
@@ -41,7 +52,9 @@ function MenuRecommendPage() {
       drink,
       hunger,
       allergies,
-      diseases
+      diseases,
+      liked_ingredients,
+      disliked_ingredients
     };
 
     try {
@@ -60,6 +73,7 @@ function MenuRecommendPage() {
       navigate("/menu-result");
     } catch (error) {
       alert("메뉴 추천 중 오류가 발생했습니다. 다시 시도해주세요.");
+      console.error("추천 요청 오류:", error);
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +82,7 @@ function MenuRecommendPage() {
   return (
     <div className="page-container">
       <h1 className="page-title">
-        <span className="word-first">오늘의</span> <span className="word-middle">먹방</span><span className="word-end">은</span>
+        <span className="word-first">오늘의&nbsp;</span> <span className="word-middle">먹방</span><span className="word-end">은</span>
       </h1>
 
       <div className="options-section">
@@ -86,46 +100,54 @@ function MenuRecommendPage() {
           </div>
         </div>
 
-        <div className="option">
-          <div className="option-title">예산</div>
-          <div className="button-group">
-            {["1만원 미만", "1~2만원", "2~3만원", "3~4만원", "4만원 이상"].map(item => (
-              <button key={item} className={budget === item ? "active" : ""} onClick={() => setBudget(item)}>{item}</button>
-            ))}
-          </div>
-        </div>
+        {region === "학식" && (
+          <p className="info-text">학식 메뉴는 예산/공복감 필터 없이 추천됩니다 🍱</p>
+        )}
 
-        <div className="option additional-filters">
-          <div className="filter-header" onClick={() => setShowFilters(!showFilters)}>
-            <div className="option-title">추가 필터</div>
-            <span className="toggle-icon">{showFilters ? "▲ 접기" : "▼ 펼치기"}</span>
-          </div>
-
-          {showFilters && (
-            <div className="sub-filters">
-              <div className="sub-option">
-                <div className="sub-title">음주</div>
-                <div className="button-group">
-                  {["없음", "소주", "맥주", "와인"].map(item => (
-                    <button key={item} className={drink === item ? "active" : ""} onClick={() => setDrink(item)}>
-                      <img src={`/${item}.png`} alt={item} className="drink-icon" />
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="sub-option">
-                <div className="sub-title">공복감</div>
-                <div className="button-group">
-                  {["적음", "보통", "많이"].map(item => (
-                    <button key={item} className={hunger === item ? "active" : ""} onClick={() => setHunger(item)}>{item}</button>
-                  ))}
-                </div>
+        {region !== "학식" && (
+          <>
+            <div className="option">
+              <div className="option-title">예산</div>
+              <div className="button-group">
+                {["1만원 미만", "1~2만원", "2~3만원", "3~4만원", "4만원 이상"].map(item => (
+                  <button key={item} className={budget === item ? "active" : ""} onClick={() => setBudget(item)}>{item}</button>
+                ))}
               </div>
             </div>
-          )}
-        </div>
+
+            <div className="option additional-filters">
+              <div className="filter-header" onClick={() => setShowFilters(!showFilters)}>
+                <div className="option-title">추가 필터</div>
+                <span className="toggle-icon">{showFilters ? "▲ 접기" : "▼ 펼치기"}</span>
+              </div>
+
+              {showFilters && (
+                <div className="sub-filters">
+                  <div className="sub-option">
+                    <div className="sub-title">음주</div>
+                    <div className="button-group">
+                      {["없음", "소주", "맥주", "와인"].map(item => (
+                        <button key={item} className={drink === item ? "active" : ""} onClick={() => setDrink(item)}>
+                          <img src={`/${item}.png`} alt={item} className="drink-icon" />
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="sub-option">
+                    <div className="sub-title">공복감</div>
+                    <div className="button-group">
+                      {["적음", "보통", "많이"].map(item => (
+                        <button key={item} className={hunger === item ? "active" : ""} onClick={() => setHunger(item)}>{item}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         <div className="recommend-button-section">
           <button className="recommend-button" onClick={handleRecommend} disabled={isLoading}>

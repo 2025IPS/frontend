@@ -11,7 +11,6 @@ function MenuResultPage() {
   const [error, setError] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
   const [imgTryIndex, setImgTryIndex] = useState(0);
-
   const hasFetched = useRef(false);
 
   const savedInfo = JSON.parse(localStorage.getItem("recommendInfo"));
@@ -27,6 +26,8 @@ function MenuResultPage() {
       ...savedInfo,
       user_id: userId ? parseInt(userId) : null,
     };
+
+    console.log("📦 보내는 추천 요청 payload:", payload);
 
     fetch(`${API_BASE_URL}/api/menu-recommend`, {
       method: 'POST',
@@ -57,6 +58,19 @@ function MenuResultPage() {
     setImgTryIndex(0);
   }, [recommendation]);
 
+  useEffect(() => {
+    console.log("✅ 추천 결과 전체:", recommendation);
+    if (recommendation && recommendation.reason) {
+      console.log("✅ 추천 이유(liked):", recommendation.reason.liked);
+      console.log("✅ 추천 이유(disliked):", recommendation.reason.disliked);
+      console.log("✅ 추천 이유(allergic):", recommendation.reason.allergic);
+      console.log("✅ 피드백 매치:", recommendation.reason.feedback_match);
+      console.log("✅ 지병 안전 여부:", recommendation.reason.disease_safe);
+    } else {
+      console.log("❗ reason이 없거나 null입니다");
+    }
+  }, [recommendation]);
+
   const handleImageError = () => {
     if (!recommendation) return;
 
@@ -76,33 +90,46 @@ function MenuResultPage() {
     window.location.reload();
   };
 
-const handleFeedback = (type) => {
-  if (!recommendation) return;
+  const handleFeedback = (type) => {
+    if (!recommendation) return;
 
-  fetch(`${API_BASE_URL}/api/feedback`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      place_name: recommendation.place_name,
-      menu_name: recommendation.menu_name,
-      feedback: type,
-      user_id: userId ? parseInt(userId) : null,
-      menu_id: recommendation.menu_id,         // ✅ 추가
-      restaurant_id: recommendation.restaurant_id // ✅ 추가
-    }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("피드백 전송 실패");
-      return res.json();
+    console.log("📡 피드백 전송 URL:", `${API_BASE_URL}/api/feedback`);
+
+    fetch(`${API_BASE_URL}/api/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        place_name: recommendation.place_name,
+        menu_name: recommendation.menu_name,
+        feedback: type,
+        user_id: userId ? parseInt(userId) : null,
+        menu_id: recommendation.menu_id,
+        restaurant_id: recommendation.restaurant_id,
+      }),
     })
-    .then(() => {
-      alert("피드백이 반영되었습니다!");
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("피드백 전송에 실패했습니다.");
-    });
-};
+      .then((res) => {
+        console.log("📨 응답 상태코드:", res.status);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("✅ 응답 데이터:", data);
+        alert("피드백이 반영되었습니다!");
+      })
+      .catch((err) => {
+        console.error("❌ 피드백 에러:", err);
+        alert("피드백 전송에 실패했습니다.");
+      });
+  };
+
+  // ✅ 메뉴 이름 줄바꿈 포맷터
+  const formatMenuName = (name) => {
+    if (name.includes(" ")) {
+      return name.replace(" ", "\n");
+    }
+    return name.length > 7
+      ? `${name.slice(0, 7)}\n${name.slice(7)}`
+      : name;
+  };
 
   if (loading) {
     return (
@@ -113,11 +140,11 @@ const handleFeedback = (type) => {
     );
   }
 
-  if (error) {
+  if (error || !recommendation || recommendation.menu_name === '추천 중 오류 발생') {
     return (
       <div className="result-container">
         <h1>에러 발생</h1>
-        <p>{error}</p>
+        <p>{error || "추천할 수 있는 메뉴가 없습니다. 조건을 다시 확인해주세요."}</p>
         <button onClick={handleRetry}>다시 시도하기</button>
       </div>
     );
@@ -129,11 +156,14 @@ const handleFeedback = (type) => {
       <img src="/chef.png" alt="캐릭터" className="character-image" />
 
       <h1 className="result-title">메뉴 추천 완료 !</h1>
-      <h2 className="result-menu">{recommendation.menu_name}</h2>
+
+      <h2 className="result-menu">
+        {formatMenuName(recommendation.menu_name)}
+      </h2>
 
       <div className="result-image-box">
         <img
-          src={imageSrc}
+          src={imageSrc || undefined}
           alt={recommendation.menu_name}
           className="result-image"
           onError={handleImageError}

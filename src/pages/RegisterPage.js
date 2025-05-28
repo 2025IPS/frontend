@@ -171,7 +171,7 @@ function RegisterPage() {
       </div>
 
       <div className="button-group">
-        <button className="back-button" onClick={() => navigate('/')}>뒤로가기</button>
+        <button className="register-back-button" onClick={() => navigate('/')}>뒤로가기</button>
         <button className="next-button" onClick={handleSubmit}>다음</button>
       </div>
     </div>

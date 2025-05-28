@@ -58,7 +58,7 @@ function TeamPickFriendPage() {
 
   return (
     <div className="friend-select-container">
-      <div className="page-title">
+      <div className="with-friend-title">
         <span
           style={{
             position: "absolute",

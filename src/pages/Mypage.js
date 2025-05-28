@@ -90,6 +90,16 @@ function Mypage() {
       disliked_menu: Array.isArray(dislikedMenu) ? dislikedMenu.join(', ') : ""
     };
 
+    // ✅ localStorage에 userProfile 저장 (추천 페이지에서 사용)
+    const userProfile = {
+      user_id: Number(localStorage.getItem("user_id")) || 1,
+      allergies: allergy,
+      diseases: disease,
+      preferred_menu: preferredMenu,
+      disliked_menu: dislikedMenu
+    };
+    localStorage.setItem("userProfile", JSON.stringify(userProfile));
+
     axios.post(`${API_BASE_URL}/mypage/update`, saveData, {
       headers: {
         'Content-Type': 'application/json'
@@ -135,7 +145,6 @@ function Mypage() {
       {renderItem("선호 메뉴", preferredMenu, setPreferredMenu, menuOptions)}
       {renderItem("비선호 메뉴", dislikedMenu, setDislikedMenu, menuOptions)}
 
-      {/* ✅ 히스토리 버튼을 저장 버튼 위로 이동 */}
       <div className="history-button-container">
         <button className="history-button" onClick={() => navigate("/history")}>
           히스토리 가기<span className="arrow">→</span>
